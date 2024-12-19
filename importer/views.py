@@ -24,7 +24,7 @@ def upload_file(request):
         if form.is_valid():
             uploaded_file = request.FILES['file']
         try:
-            messages.info(request, f'uploaded {uploaded_file.name}')
+            messages.success(request, f'uploaded {uploaded_file.name}')
             if uploaded_file.name.lower().endswith('.igc'):
                 spawn_flight(request,uploaded_file)
 
@@ -54,7 +54,7 @@ def zip_file_iterate(zip_file,request):
             # Ensure the file has a .igc extension
             if not file_name.lower().endswith('.igc'):
                 # Skip non-.igc files
-                messages.info(request, f'{file_name} Skipping non-IGC')
+                messages.warning(request, f'{file_name} Skipping non-IGC')
                 continue
             
             # ensure ascii file
@@ -62,21 +62,20 @@ def zip_file_iterate(zip_file,request):
                 try:
                     file_data = file.read().decode('ascii')
                 except UnicodeDecodeError:
-                    messages.info(request, f'{file_name} Skipping non-ASCII file')
+                    messages.warning(request, f'{file_name} Skipping non-ASCII file')
                     continue
             
             # make a file-like object from asii file_data
             tmp = io.StringIO()
             tmp.write(file_data)
             # Wrap it in a Django File object
-            messages.info(request, f'{file_name}')
             spawn_flight(request,File(tmp,name=file_name))
 
 def spawn_flight(request,file):
     try:
         flight = Flight.objects.create()
         flight.init_from_file(file)
-        messages.info(request, f'Ok {flight.__str__()}')
+        messages.success(request, f'OK {file.name}: {flight.__str__()}')
     except Exception as e:
         flight.delete()
-        messages.info(request, f'Exception {e.__str__()}')
+        messages.error(request, f'Error {file.name}: {e.__str__()}')

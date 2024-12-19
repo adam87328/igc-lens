@@ -13,7 +13,7 @@ class HomePageView(TemplateView):
 
 class FlightListView(ListView):
     model = Flight
-    paginate_by = 30
+    paginate_by = 20
     template_name = "frontend/flight_list.html"
     context_object_name = 'flights'
 

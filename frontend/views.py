@@ -10,25 +10,18 @@ from django.views.generic.list import ListView
 class HomePageView(TemplateView):
     template_name = "frontend/home.html"
 
-# def flight_list(request):
-#     fl = Flight.objects.order_by("-import_datetime")[:20]
-#     context = {"fl": fl}
-#     return render(request, "frontend/flight_list.html", context)
 
 class FlightListView(ListView):
     model = Flight
-    paginate_by = 20
+    paginate_by = 30
     template_name = "frontend/flight_list.html"
+    context_object_name = 'flights'
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["fl"] = Flight.objects.order_by("-import_datetime")
-        return context
+    def get_queryset(self):
+        # Apply ordering to the queryset to prevent UnorderedObjectListWarning
+        return Flight.objects.order_by('id')
 
-#def flight_detail(request, flight_id):
-#    flight = get_object_or_404(Flight, pk=flight_id)
-#    return render(request, "frontend/flight_detail.html", {"flight": flight})
-    
+
 class FlightDetail(generic.DetailView):
     model = Flight
     template_name = "frontend/flight_detail.html"

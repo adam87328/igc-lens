@@ -2,15 +2,28 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
 from importer.models import *
 from django.views import generic
+from django.views.generic.base import TemplateView
+from django.views.generic.list import ListView
 
+# https://docs.djangoproject.com/en/5.1/ref/class-based-views/
 
-def home(request):
-    return HttpResponse("home")
+class HomePageView(TemplateView):
+    template_name = "frontend/home.html"
 
-def flight_list(request):
-    fl = Flight.objects.order_by("-import_datetime")[:20]
-    context = {"fl": fl}
-    return render(request, "frontend/flight_list.html", context)
+# def flight_list(request):
+#     fl = Flight.objects.order_by("-import_datetime")[:20]
+#     context = {"fl": fl}
+#     return render(request, "frontend/flight_list.html", context)
+
+class FlightListView(ListView):
+    model = Flight
+    paginate_by = 20
+    template_name = "frontend/flight_list.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["fl"] = Flight.objects.order_by("-import_datetime")
+        return context
 
 #def flight_detail(request, flight_id):
 #    flight = get_object_or_404(Flight, pk=flight_id)

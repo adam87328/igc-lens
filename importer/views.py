@@ -13,9 +13,6 @@ from django.urls import reverse
 from .forms import FileUploadForm
 from .models import *
 
-def index(request):
-    return HttpResponse("hola!")
-
 def upload_file(request):
     """IGC upload handler, accepts
 
@@ -27,8 +24,8 @@ def upload_file(request):
         if form.is_valid():
             uploaded_file = request.FILES['file']
         try:
+            messages.info(request, f'uploaded {uploaded_file.name}')
             if uploaded_file.name.lower().endswith('.igc'):
-                messages.info(request, f'{uploaded_file.name}')
                 spawn_flight(request,uploaded_file)
 
             elif uploaded_file.name.lower().endswith('.zip'):

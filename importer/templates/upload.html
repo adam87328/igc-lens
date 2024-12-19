@@ -1,3 +1,9 @@
+{% extends "main.html" %}
+{% block title %}
+Upload
+{% endblock %}
+
+{% block content %}
 <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.as_p }}
@@ -11,3 +17,4 @@
         {% endfor %}
     </ul>
 {% endif %}
+{% endblock %}

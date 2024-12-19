@@ -34,7 +34,8 @@ INTERNAL_IPS = [
 # Application definition
 
 INSTALLED_APPS = [
-    "debug_toolbar",
+    'bootstrap5',
+    'debug_toolbar',
     'frontend.apps.FrontendConfig',
     'importer.apps.ImportIgcConfig',
     'django.contrib.admin',

@@ -158,6 +158,7 @@ cython_debug/
 .DS_Store
 
 # mine
+/igc_files
 dbg*.html
 dbg*.json
 TODO.md

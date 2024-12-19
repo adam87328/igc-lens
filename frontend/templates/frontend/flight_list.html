@@ -1,4 +1,10 @@
-<body>
+{% extends "main.html" %}
+
+{% block title %}
+Flight List
+{% endblock %}
+
+{% block content %}
 {% if fl %}
     <ul>
     {% for flight in fl %}
@@ -8,4 +14,4 @@
 {% else %}
     <p>No flights in DB.</p>
 {% endif %}
-</body>
+{% endblock %}

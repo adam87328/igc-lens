@@ -1,0 +1,11 @@
+<body>
+{% if fl %}
+    <ul>
+    {% for flight in fl %}
+        <li><a href="{% url 'frontend:flight_detail' flight.id %}">{{ flight }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No flights in DB.</p>
+{% endif %}
+</body>

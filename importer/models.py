@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from django.urls import reverse
 
 import json
 import hashlib
@@ -126,27 +127,38 @@ class Flight(JSONModel):
         self.save()
 
     def _xc_score_response(self,d):
-        """" create children from comp-metrics json response"""
+        """"Create children from comp-metrics json response"""
         XCScore.objects.create(parent=self,json_data=d["properties"])
         self.xcscore.geojson = d
         self.xcscore.save()
+
+    def _a_href(self,link_text):
+        """Return a html link element to this flights detail page"""
+        return f'<a href=" \
+            {reverse('frontend:flight_detail', args=[self.id])}"> \
+            {link_text}</a>'
 
     @property
     def to_geojson_feature_point(self):
         if not self.takeoff:
             return {}
-        # else
+        popup = f"<ul>\
+            <li>{self.takeoff.time.date()}</li>\
+            <li>{self.airtime_str} h</li>\
+            <li>{self.xcscore.type} {self.xcscore.score} p</li>\
+            <li>{self._a_href('Flight detail')}</li>\
+            </ul>"
         return {
             "type": "Feature",
             "properties": {
-                "popupContent": self.file_hash_short
+                "popupContent": popup
             },
             "geometry": {
                 "type": "Point",
                 "coordinates": [self.takeoff.lon, self.takeoff.lat]
             }
         }
-
+        
     @property
     def file_hash_short(self):
         """Return the first 5 characters of file_hash or an empty 

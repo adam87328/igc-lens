@@ -1,12 +1,14 @@
+# django
 from django.db import models
 from django.utils import timezone
 from django.urls import reverse
-
+from django.db.models.functions import ExtractYear
+# other
 import json
 import hashlib
 import pytz
 from datetime import datetime
-
+# self
 from .microservice import MicroserviceInterface
 
 class JSONModel(models.Model):
@@ -56,14 +58,33 @@ class JSONModel(models.Model):
         # Convert the naive datetime to a timezone-aware one
         return utc_timezone.localize(naive_datetime)
 
+
+class FlightManager(models.Manager):
+    def unique_years(self):
+        """Return unique list of years, based on takeoff time stamp"""
+        # Annotate year from related Takeoff 'time' field
+        q = Flight.objects.annotate(year=ExtractYear('takeoff__time'))
+        # Extract unique
+        q = q.values('year').distinct()
+        # QuerySet > regular list
+        unique_years = list(q.values_list('year', flat=True))
+        return unique_years
+
+
 # Create your models here.
 class Flight(JSONModel):
     """Root model"""
+
+    # custom manager
+    objects = FlightManager()
+
+    # properties
     file = models.FileField(upload_to='igc_files/')
     # SHA256 - field throws error if hash already exists
     file_hash = models.CharField(max_length=64, unique=True)
     # flight import datetime
     import_datetime = models.DateTimeField(auto_now_add=True)
+    
     # -----------------------------------------------------
     # unpack json data
     #

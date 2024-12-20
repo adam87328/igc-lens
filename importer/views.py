@@ -42,7 +42,7 @@ def upload_file(request):
         # show upload form
         form = FileUploadForm()
 
-    return render(request, 'upload.html', {'form': form})
+    return render(request, 'importer/upload.html', {'form': form})
 
 
 def zip_file_iterate(zip_file,request):

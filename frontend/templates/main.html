@@ -23,8 +23,8 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav">
-        <a class="nav-link" href="/upload">Upload</a>
-        <a class="nav-link" href="/flight/list">Flights</a>
+        <a class="nav-link" href="{% url 'frontend:flights_list' %}">List</a>
+        <a class="nav-link" href="{% url 'importer:upload' %}">Upload</a>
       </div>
     </div>
   </div>

@@ -4,6 +4,6 @@ from . import views
 app_name = "frontend"
 urlpatterns = [
     path('', views.HomePageView.as_view(), name='home'),
-    path('flight/list/', views.FlightListView.as_view(), name='flight_list'),
+    path('flights/list/', views.FlightListView.as_view(), name='flights_list'),
     path("flight/<int:pk>/", views.FlightDetail.as_view(), name="flight_detail"),
 ]

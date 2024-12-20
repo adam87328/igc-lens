@@ -1,4 +1,26 @@
 {% extends "main.html" %}
+{% load leaflet_tags %}
+
+{% block head %}
+    {% leaflet_js %}
+    {% leaflet_css %}
+{% endblock %}
+
 {% block content %}
-{{ flight }}
+<script>
+    function map_init_basic (map, options) {
+        L.marker([50.5, 30.5]).addTo(map);
+        L.geoJSON({{ flight.glides.geojson|safe }}).addTo(map);
+    }
+</script>
+
+<div class="row">
+    <div class="col-4">
+        {{ flight }}
+    </div>
+    <div class="col-8">
+        {% leaflet_map "yourmap" callback="window.map_init_basic" %}
+    </div>
+</div>
+
 {% endblock %}

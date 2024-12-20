@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html>
-{% load leaflet_tags %}
 
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   {% load bootstrap5 %}
   {% bootstrap_css %}
   {% bootstrap_javascript %}
-  {% leaflet_js %}
-  {% leaflet_css %}
+  <!-- template extend "head" -->
+  {% block head %}
+  {% endblock %}
 </head>
 
 <body>
@@ -29,11 +29,9 @@
     </div>
   </div>
 </nav>
-
-<!-- block contet -->
+<!-- template extend "content" -->
 {% block content %}
 {% endblock %}
-<!-- end block contet -->
 </div>
 </div>
 </body>

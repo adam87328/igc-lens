@@ -133,5 +133,5 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LEAFLET_CONFIG = {
-    # conf here
+    'MINIMAP': True
 }

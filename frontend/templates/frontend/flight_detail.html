@@ -2,15 +2,16 @@
 {% load leaflet_tags %}
 
 {% block head %}
-    {% leaflet_js %}
-    {% leaflet_css %}
+{% leaflet_js %}
+{% leaflet_css %}
 {% endblock %}
 
 {% block content %}
 <script>
-    function map_init_basic (map, options) {
-        L.marker([50.5, 30.5]).addTo(map);
-        L.geoJSON({{ flight.glides.geojson|safe }}).addTo(map);
+    function map_init(map, options) {
+        map.setView([{{ flight.takeoff.lat }}, {{ flight.takeoff.lon }}], 13);
+    L.geoJSON({{ flight.glides.geojson | safe }}).addTo(map);
+    L.geoJSON({{ flight.thermals.geojson | safe }}).addTo(map);
     }
 </script>
 
@@ -19,7 +20,7 @@
         {{ flight }}
     </div>
     <div class="col-8">
-        {% leaflet_map "yourmap" callback="window.map_init_basic" %}
+        {% leaflet_map "yourmap" callback="window.map_init" %}
     </div>
 </div>
 

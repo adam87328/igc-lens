@@ -1,5 +1,6 @@
 {% extends 'main.html' %}
 {% load leaflet_tags %}
+{% load static %}
 
 {% block head %}
   {% leaflet_js %}
@@ -8,26 +9,13 @@
 
 {% block content %}
 <style>
-  #map {
-    height: 600px;
-  }
+  #map { height: 600px; }
 </style>
 
 <script>
-  function map_init(map, options) {
-    // popup handler
-    function onEachFeature(feature, layer) {
-      // does this feature have a property named popupContent?
-      if (feature.properties && feature.properties.popupContent) {
-          layer.bindPopup(feature.properties.popupContent);
-      }
-    }
-    // add the GeoJSON layer
-    L.geoJSON({{ latLon | safe }}, {onEachFeature: onEachFeature}).addTo(map);
-    // center on the Alps
-    map.setView([45.87, 10.87], 6);
-  }
+  feature_list = {{ latLon | safe }};
 </script>
+<script src=" {% static 'leaflet_map_flights.js' %}"></script>
 
 {% leaflet_map 'map' callback='window.map_init' %}
 {% endblock %}

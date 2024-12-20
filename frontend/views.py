@@ -11,13 +11,18 @@ class HomePageView(TemplateView):
     template_name = "frontend/home.html"
 
 
-class FlightListMap(ListView):
-    model = Flight
+class FlightListMap(TemplateView):
+    """A map where each flight is represented as marker"""
     template_name = "frontend/flights_map.html"
-    context_object_name = 'flights'
-
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["latLon"] = \
+            [f.to_geojson_feature_point for f in Flight.objects.all()]
+        return context
 
 class FlightListView(ListView):
+    """A table where each flight is a row"""
     model = Flight
     paginate_by = 20
     template_name = "frontend/flights_list.html"
@@ -29,5 +34,6 @@ class FlightListView(ListView):
 
 
 class FlightDetail(generic.DetailView):
+    """Detail view of one flight, includes map and textual data"""
     model = Flight
     template_name = "frontend/flight_detail.html"

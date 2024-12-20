@@ -132,6 +132,22 @@ class Flight(JSONModel):
         self.xcscore.save()
 
     @property
+    def to_geojson_feature_point(self):
+        if not self.takeoff:
+            return {}
+        # else
+        return {
+            "type": "Feature",
+            "properties": {
+                "popupContent": self.file_hash_short
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [self.takeoff.lon, self.takeoff.lat]
+            }
+        }
+
+    @property
     def file_hash_short(self):
         """Return the first 5 characters of file_hash or an empty 
         string if not set."""

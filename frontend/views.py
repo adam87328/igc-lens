@@ -11,10 +11,16 @@ class HomePageView(TemplateView):
     template_name = "frontend/home.html"
 
 
+class FlightListMap(ListView):
+    model = Flight
+    template_name = "frontend/flights_map.html"
+    context_object_name = 'flights'
+
+
 class FlightListView(ListView):
     model = Flight
     paginate_by = 20
-    template_name = "frontend/flight_list.html"
+    template_name = "frontend/flights_list.html"
     context_object_name = 'flights'
 
     def get_queryset(self):

@@ -9,18 +9,22 @@
 {% block content %}
 <script>
     function map_init(map, options) {
-        map.setView([{{ flight.takeoff.lat }}, {{ flight.takeoff.lon }}], 13);
+    map.setView([{{ flight.takeoff.lat }}, {{ flight.takeoff.lon }}], 13);
     L.geoJSON({{ flight.glides.geojson | safe }}).addTo(map);
     L.geoJSON({{ flight.thermals.geojson | safe }}).addTo(map);
     }
 </script>
+
+<style>
+    #map { height: 600px; }
+</style>
 
 <div class="row">
     <div class="col-4">
         {{ flight }}
     </div>
     <div class="col-8">
-        {% leaflet_map "yourmap" callback="window.map_init" %}
+        {% leaflet_map "map" callback="window.map_init" %}
     </div>
 </div>
 

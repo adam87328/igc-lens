@@ -1,0 +1,19 @@
+.circle {
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
+    border-radius: 50%;
+    border-style: solid;
+    font-size: 16px;
+    font-weight: bold;
+  }
+  .circle.circle1 {
+    background: rgba(0, 57, 128, 0.2);
+    border-color: #3388FF;
+    color: white;
+  }
+  .circle.circle2 {
+    background: rgba(0, 57, 128, 0.2);
+    border-color: green;
+    color: yellow;
+  }

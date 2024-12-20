@@ -34,6 +34,8 @@ INTERNAL_IPS = [
 # Application definition
 
 INSTALLED_APPS = [
+    'leaflet',
+    'djgeojson',
     'bootstrap5',
     'debug_toolbar',
     'frontend.apps.FrontendConfig',

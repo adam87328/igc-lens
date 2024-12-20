@@ -1,32 +1,40 @@
 <!DOCTYPE html>
 <html>
+{% load leaflet_tags %}
+
 <head>
-  <title>{% block title %}{% endblock %}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   {% load bootstrap5 %}
   {% bootstrap_css %}
   {% bootstrap_javascript %}
+  {% leaflet_js %}
+  {% leaflet_css %}
 </head>
-<body>
 
-<div class="container">
-  
-  <nav class="navbar navbar-expand-lg bg-body-tertiary">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="/">igc-lens</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-        <div class="navbar-nav">
-          <a class="nav-link" href="/upload">Upload</a>
-          <a class="nav-link" href="/flight/list">Flights</a>
-        </div>
+<body>
+<div class="container-lg mt-5 border">
+<div class="col-xl-10 offset-xl-1">
+
+<nav class="navbar navbar-expand-lg bg-primary-subtle text-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/">igc-lens</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div class="navbar-nav">
+        <a class="nav-link" href="/upload">Upload</a>
+        <a class="nav-link" href="/flight/list">Flights</a>
       </div>
     </div>
-  </nav>
+  </div>
+</nav>
 
-  {% block content %}
-  {% endblock %}
+<!-- block contet -->
+{% block content %}
+{% endblock %}
+<!-- end block contet -->
+</div>
 </div>
 </body>
 </html>

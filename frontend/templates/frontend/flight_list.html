@@ -5,7 +5,7 @@ Flight List
 {% endblock %}
 
 {% block content %}
-<div class="container mt-3">
+
 <!-- Pagination controls -->
 <nav aria-label="Page navigation example">
     <ul class="pagination justify-content-center">
@@ -21,37 +21,36 @@ Flight List
     </ul>
 </nav>
 {% if flights %}
-</div>
-<div class="container mt-3">
-    <h2>Flights</h2>
-    <table class="table table-hover table-sm">
-      <thead>
-        <tr>
-          <th>Date</th>
-          <th>TO (UTC)</th>
-          <th>Airtime</th>
-          <th>Country</th>
-          <th>Takeoff</th>
-          <th>XC Points</th>
-          <th>ID</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for flight in flights %}
-        <tr>
-            <td>{{ flight.takeoff.time.date }}</td>
-            <td>{{ flight.takeoff.time|time:"H:i" }}</td>
-            <td>{{ flight.airtime_str }}</td>
-            <td>{{ flight.takeoff.country|upper }}</td>
-            <td>{{ flight.takeoff.name|default:"N/A" }}</td>
-            <td>{{ flight.xcscore.score|floatformat:0 }}</td>
-            <td><a href="{% url 'frontend:flight_detail' flight.id %}">{{ flight.file_hash_short}}</a></td>
-            </a>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-</div>
+
+<h2>Flights</h2>
+<table class="table table-hover table-sm">
+  <thead>
+    <tr>
+      <th>Date</th>
+      <th>TO (UTC)</th>
+      <th>Airtime</th>
+      <th>Country</th>
+      <th>Takeoff</th>
+      <th>XC Points</th>
+      <th>ID</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for flight in flights %}
+    <tr>
+        <td>{{ flight.takeoff.time.date }}</td>
+        <td>{{ flight.takeoff.time|time:"H:i" }}</td>
+        <td>{{ flight.airtime_str }}</td>
+        <td>{{ flight.takeoff.country|upper }}</td>
+        <td>{{ flight.takeoff.name|default:"N/A" }}</td>
+        <td>{{ flight.xcscore.score|floatformat:0 }}</td>
+        <td><a href="{% url 'frontend:flight_detail' flight.id %}">{{ flight.file_hash_short}}</a></td>
+        </a>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
 {% else %}
     <p>No flights in DB.</p>
 {% endif %}

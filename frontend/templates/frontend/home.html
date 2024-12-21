@@ -1,5 +1,21 @@
 {% extends "main.html" %}
 
 {% block content %}
-Home
+
+<div>{{ airtime_total }}</div>
+
+<div>{{ airtime_per_year }}</div>
+
+<div>{{ flights_per_year }}</div>
+
+{% for key, value in flights_per_year.items %}
+<div class="progress" role="progressbar" aria-label="{{ key }}" aria-valuenow="{{ value }}" aria-valuemin="0" aria-valuemax="{{ flights_per_year.max }}">
+    <div class="progress-bar" style="width: {{ value }}">{{ value }}</div>
+</div>
+{% endfor %}
+
+
+
+
+
 {% endblock %}

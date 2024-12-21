@@ -5,8 +5,7 @@ from django.http import HttpResponse
 from django.views import generic
 from django.views.generic.base import TemplateView
 from django.views.generic.list import ListView
-# https://docs.djangoproject.com/en/5.1/topics/db/aggregation/
-from django.db.models import Avg, Count, Min, Sum
+
 
 # project
 from importer.models import *
@@ -17,16 +16,26 @@ class HomePageView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["total_airtime"] = Flight.objects.aggregate(Sum("airtime"))
-        # get airtime per year
+        
+        # get total values over all flights
+        context["airtime_total"] = Flight.objects.get_airtime_total()
+        context["flights_total"] = Flight.objects.get_flights_total()
+        
+        # get values per year
         airtime_per_year = {}
         flights_per_year = {}
-        for year in Flight.objects.unique_years():
-            q = Flight.objects.filter(takeoff__time__year=year)
-            airtime_per_year[year] = q.aggregate(Sum("airtime"))
-            flights_per_year[year] = q.count()
+        for year in Flight.objects.get_unique_years():
+            airtime_per_year[year] = Flight.objects.get_airtime_for_year(year)
+            flights_per_year[year] = Flight.objects.get_flights_for_year(year)
+
+
         context["airtime_per_year"] = airtime_per_year
         context["flights_per_year"] = flights_per_year
+        # for defining what 100% is in a bar view
+        context["airtime_per_year_max"] = max(airtime_per_year.values())
+        context["flights_per_year_max"] = max(flights_per_year.values())
+
+        return context
 
 
 class FlightListMap(TemplateView):

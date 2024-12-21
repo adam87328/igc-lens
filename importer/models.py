@@ -2,7 +2,10 @@
 from django.db import models
 from django.utils import timezone
 from django.urls import reverse
+# https://docs.djangoproject.com/en/5.1/topics/db/aggregation/
+from django.db.models import Avg, Count, Min, Sum
 from django.db.models.functions import ExtractYear
+
 # other
 import json
 import hashlib
@@ -60,7 +63,7 @@ class JSONModel(models.Model):
 
 
 class FlightManager(models.Manager):
-    def unique_years(self):
+    def get_unique_years(self):
         """Return unique list of years, based on takeoff time stamp"""
         # Annotate year from related Takeoff 'time' field
         q = Flight.objects.annotate(year=ExtractYear('takeoff__time'))
@@ -69,6 +72,24 @@ class FlightManager(models.Manager):
         # QuerySet > regular list
         unique_years = list(q.values_list('year', flat=True))
         return unique_years
+    
+    def get_airtime_total(self):
+        t_sec = Flight.objects.aggregate(Sum("airtime")).get('airtime__sum', 0)
+        return t_sec / 3600 # time in hours
+
+    def get_airtime_for_year(self,year):
+        """Return airtime in hours, 0 if no flights in year"""
+        q = Flight.objects.filter(takeoff__time__year=year)
+        t_sec = q.aggregate(Sum("airtime")).get('airtime__sum', 0)
+        return t_sec/3600 # time in hours
+    
+    def get_flights_total(self):
+        return Flight.objects.count()
+    
+    def get_flights_for_year(self,year):
+        """Return number of flights, 0 if no flights in year"""
+        q = Flight.objects.filter(takeoff__time__year=year)
+        return q.count()
 
 
 # Create your models here.

@@ -101,6 +101,8 @@ class FlightManager(models.Manager):
                 output_field=FloatField()))
         # todo: threshold should be a setting, perhaps user-tunable?
         q = q.filter(xc_points_per_hour__gt=15)
+        # exclude short straight flights
+        q = q.filter(xcscore__score__gt=10)
         return q
 
 # Create your models here.

@@ -3,7 +3,7 @@ from django.db import models
 from django.utils import timezone
 from django.urls import reverse
 # https://docs.djangoproject.com/en/5.1/topics/db/aggregation/
-from django.db.models import Avg, Count, Min, Sum
+from django.db.models import Sum, F, ExpressionWrapper, FloatField
 from django.db.models.functions import ExtractYear
 
 # other
@@ -90,7 +90,18 @@ class FlightManager(models.Manager):
         """Return number of flights, 0 if no flights in year"""
         q = Flight.objects.filter(takeoff__time__year=year)
         return q.count()
-
+    
+    def get_only_xc(self):
+        """Derive a boolean whether the flight is a local flight, or XC"""
+        # todo: once we have xc distance from igc-xc-score, use instad
+        # of points
+        q = Flight.objects.annotate(
+            xc_points_per_hour=ExpressionWrapper(
+                F('xcscore__score') / ( F('airtime') / 3600),
+                output_field=FloatField()))
+        # todo: threshold should be a setting, perhaps user-tunable?
+        q = q.filter(xc_points_per_hour__gt=15)
+        return q
 
 # Create your models here.
 class Flight(JSONModel):

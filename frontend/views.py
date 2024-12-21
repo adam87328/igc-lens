@@ -64,7 +64,22 @@ class FlightListView(ListView):
 
     def get_queryset(self):
         # Apply ordering to the queryset to prevent UnorderedObjectListWarning
-        return Flight.objects.order_by('id')
+        
+        # Radio buttons: Get the 'filter' value from the GET request
+        filter_value = self.request.GET.get('filter', 'all')
+        # Apply filters based on the radio button value
+        if filter_value == 'xc':
+            queryset = Flight.objects.get_only_xc().order_by('id')
+        else:
+            queryset = Flight.objects.order_by('id')
+
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Add the current filter to the context so you can use it in the template
+        context['current_filter'] = self.request.GET.get('filter', 'all')
+        return context
 
 
 class FlightDetail(generic.DetailView):

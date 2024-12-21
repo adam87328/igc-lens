@@ -1,5 +1,26 @@
 {% extends "main.html" %}
 {% block content %}
+
+<form method="get" id="filter-form">
+  <label>
+      <input type="radio" name="filter" value="all" {% if request.GET.filter == "all" %}checked{% endif %}>
+      Show All
+  </label>
+  <label>
+      <input type="radio" name="filter" value="xc" {% if request.GET.filter == "xc" %}checked{% endif %}>
+      Only XC
+  </label>
+</form>
+
+<script>
+  // Automatically submit the form when a radio button is changed
+  document.querySelectorAll('input[name="filter"]').forEach(function (radio) {
+      radio.addEventListener('change', function () {
+          document.getElementById('filter-form').submit();
+      });
+  });
+</script>
+
 <!-- Pagination controls -->
 <nav aria-label="Page navigation example">
     <ul class="pagination justify-content-center">

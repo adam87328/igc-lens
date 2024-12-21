@@ -34,13 +34,32 @@
     #map { height: 600px; }
 </style>
 
-<div class="row">
-    <div class="col-4">
-        {{ flight }}
-    </div>
-    <div class="col-8">
-        {% leaflet_map "map" callback="window.map_init" %}
-    </div>
+<div class="row"><div class="col-4">
+<h4>Flight</h4>
+<ul>
+<li>Takeoff {{flight.takeoff.time }} UTC</li>
+<li>Landing {{flight.landing.time }} UTC</li>
+<li>{{ flight.airtime_str }} h</li>
+<li>{{flight.takeoff.country.upper}} {{flight.takeoff.name}} (dist {{flight.takeoff.dist|floatformat}} m)</li>
+<li>{{ flight.xcscore.type }} {{ flight.xcscore.score }} p</li>
+</ul>
+<h4>Thermals</h4>
+<ul>
+<li>Fraction of flight: {{flight.thermals.time_total|floatformat:2}}</li>
+<li>Max average climb: {{flight.thermals.max_avg_climb|floatformat}} m/s</li>
+<li>Max gain: {{flight.thermals.max_gain|floatformat}} m</li>
+<li>Left-Mix-Right: {{flight.thermals.circ_dir_L|floatformat:2}} : {{flight.thermals.circ_dir_LR|floatformat:2}} : {{flight.thermals.circ_dir_R|floatformat:2}}</li>
+</ul>
+
+<h4>Glides</h4>
+<ul>
+<li>Fraction of flight: {{flight.glides.time_total|floatformat:2}}</li>
+<li>Average speed: {{flight.glides.avg_speed|floatformat:2}} km/h</li>
+</ul>
+</div>
+<div class="col-8">
+    {% leaflet_map "map" callback="window.map_init" %}
+</div>
 </div>
 
 {% endblock %}

@@ -10,11 +10,26 @@
 <script>
     function map_init(map, options) {
     map.setView([{{ flight.takeoff.lat }}, {{ flight.takeoff.lon }}], 13);
-    L.geoJSON({{ flight.glides.geojson | safe }}).addTo(map);
-    L.geoJSON({{ flight.thermals.geojson | safe }}).addTo(map);
+    var style_thermals = {
+        "color": "#00bf06",
+        "weight": 2,
+        "opacity": 1
+    };
+    var style_glides = {
+        "color": "#ed9a00",
+        "weight": 2,
+        "opacity": 1
+    };
+    var style_xcscore = {
+        "color": "#30fcff",
+        "weight": 5,
+        "opacity": 0.65
+    };
+    L.geoJSON({{ flight.glides.geojson | safe }}, {style: style_glides}).addTo(map);
+    L.geoJSON({{ flight.thermals.geojson | safe }}, {style: style_thermals}).addTo(map);
+    L.geoJSON({{ xcscore_layer | safe }}, {style: style_xcscore}).addTo(map);
     }
 </script>
-
 <style>
     #map { height: 600px; }
 </style>

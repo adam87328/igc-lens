@@ -71,3 +71,10 @@ class FlightDetail(generic.DetailView):
     """Detail view of one flight, includes map and textual data"""
     model = Flight
     template_name = "frontend/flight_detail.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # ensure correct booleans for JS, true vs True in python
+        d = self.object.xcscore.geojson
+        context["xcscore_layer"] = json.dumps(d)
+        return context

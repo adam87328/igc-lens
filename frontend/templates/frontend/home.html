@@ -2,20 +2,55 @@
 
 {% block content %}
 
-<div>{{ airtime_total }}</div>
+<h1>Total</h1>
+<div class="row"><div class="col-6">
+<p class="lead">
+    You left the ground {{total.flights}} times for a total of 
+    {{total.airtime|floatformat}} hours. Yay!
+</p>
+</div></div>
 
-<div>{{ airtime_per_year }}</div>
-
-<div>{{ flights_per_year }}</div>
-
-{% for key, value in flights_per_year.items %}
-<div class="progress" role="progressbar" aria-label="{{ key }}" aria-valuenow="{{ value }}" aria-valuemin="0" aria-valuemax="{{ flights_per_year.max }}">
-    <div class="progress-bar" style="width: {{ value }}">{{ value }}</div>
+<h1>Per Year</h1>
+<h2>Airtime</h2>
+{% for year, vals in per_year.items %}
+<div class="row">
+    <div class="col-1">
+        {{year}}
+    </div>
+    <div class="col-11">
+        <div class="progress" 
+             role="progressbar" 
+             aria-label="{{ year }}" 
+             aria-valuenow="{{ vals.airtime.rel }}" 
+             aria-valuemin="0" 
+             aria-valuemax="100">
+            <div class="progress-bar" style="width: {{ vals.airtime.rel }}%">
+                {{ vals.airtime.abs|floatformat }} h 
+            </div>
+        </div>
+    </div>
 </div>
 {% endfor %}
 
-
-
-
+<h2>Number of Flights</h2>
+{% for year, vals in per_year.items %}
+<div class="row">
+    <div class="col-1">
+        {{year}}
+    </div>
+    <div class="col-11">
+        <div class="progress" 
+             role="progressbar" 
+             aria-label="{{ year }}" 
+             aria-valuenow="{{ vals.flights.rel }}" 
+             aria-valuemin="0" 
+             aria-valuemax="100">
+            <div class="progress-bar" style="width: {{ vals.flights.rel }}%">
+                {{ vals.flights.abs|floatformat }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
 
 {% endblock %}

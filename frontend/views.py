@@ -16,25 +16,31 @@ class HomePageView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        
+        # Flight object manager shortcut
+        fm = Flight.objects
+
         # get total values over all flights
-        context["airtime_total"] = Flight.objects.get_airtime_total()
-        context["flights_total"] = Flight.objects.get_flights_total()
+        total = {}
+        total["flights"] = fm.get_flights_total()
+        total["airtime"] = fm.get_airtime_total()
         
         # get values per year
-        airtime_per_year = {}
-        flights_per_year = {}
-        for year in Flight.objects.get_unique_years():
-            airtime_per_year[year] = Flight.objects.get_airtime_for_year(year)
-            flights_per_year[year] = Flight.objects.get_flights_for_year(year)
+        per_year = {}
+        for y in fm.get_unique_years():
+            per_year[y] = {"airtime": {"abs": 0, "rel": 0},
+                           "flights": {"abs": 0, "rel": 0}}
+            per_year[y]["airtime"]["abs"] = fm.get_airtime_for_year(y)
+            per_year[y]["flights"]["abs"] = fm.get_flights_for_year(y)
 
+        # compute values relative to best year
+        for field in ["airtime", "flights"]:
+            m = max(item[field]["abs"] for item in per_year.values())
+            for item in per_year.values():
+                # in percent for use in CSS
+                item[field]["rel"] = 100 * item[field]["abs"] / m
 
-        context["airtime_per_year"] = airtime_per_year
-        context["flights_per_year"] = flights_per_year
-        # for defining what 100% is in a bar view
-        context["airtime_per_year_max"] = max(airtime_per_year.values())
-        context["flights_per_year_max"] = max(flights_per_year.values())
-
+        context["per_year"] = per_year
+        context["total"] = total
         return context
 
 

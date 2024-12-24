@@ -1,15 +1,30 @@
 import requests
+import json
 
 class MicroserviceInterface():
 
-    XC_METRICS_URL = 'http://127.0.0.1:8081/xcmetrics'
-    XC_SCORE_URL = 'http://127.0.0.1:8082/compmetrics'
+    XCMETRICS_URL = 'http://127.0.0.1:8081/'
+    XCSCORE_URL = 'http://127.0.0.1:8083/'
+    GEOLOOKUP_URL = 'http://127.0.0.1:8082/'
 
-    def xc_metrics_service(self,igc_file):
-        return self.send_file_to_microservice(igc_file,self.XC_METRICS_URL)
+    def takeoffdb_service(self,lat,lon):
+        response = requests.get(
+            self.GEOLOOKUP_URL + 'takeoffdb', 
+            params={'lat': lat, 'lon': lon} )
+        
+        return json.loads(response.text)
 
-    def xc_score_service(self,igc_file):
-        return self.send_file_to_microservice(igc_file,self.XC_SCORE_URL)
+    def geocode_service(self,lat,lon):
+        response = requests.get(
+            self.GEOLOOKUP_URL + 'geocode', 
+            params={'lat': lat, 'lon': lon} )
+        return json.loads(response.text)
+
+    def xcmetrics_service(self,igc_file):
+        return self.send_file_to_microservice(igc_file,self.XCMETRICS_URL)
+
+    def xcscore_service(self,igc_file):
+        return self.send_file_to_microservice(igc_file,self.XCSCORE_URL)
 
     @staticmethod
     def send_file_to_microservice(igc_file,service_url):
@@ -32,21 +47,31 @@ class MicroserviceInterface():
         return json_data
 
     def are_services_up(self):
-        return (self.service_up_xc_score() 
-                & self.service_up_xc_metrics())
+        return (  self.service_up_xcscore() 
+                & self.service_up_xcmetrics()
+                & self.service_up_geolookup()
+                )
 
-    def service_up_xc_metrics(self):
+    def service_up_xcmetrics(self):
         """Test microservice is running, and responds to dummy GET"""
         try:
-            response = requests.get(self.XC_METRICS_URL)
+            response = requests.get(self.XCMETRICS_URL)
         except Exception as e:
             return False
         return response.status_code == 200
 
-    def service_up_xc_score(self):
+    def service_up_xcscore(self):
         """Test microservice is running, and responds to dummy GET"""
         try:
-            response = requests.get(self.XC_SCORE_URL)
+            response = requests.get(self.XCSCORE_URL)
+        except Exception as e:
+            return False
+        return response.status_code == 200
+
+    def service_up_geolookup(self):
+        """Test microservice is running, and responds to dummy GET"""
+        try:
+            response = requests.get(self.GEOLOOKUP_URL)
         except Exception as e:
             return False
         return response.status_code == 200

@@ -6,19 +6,32 @@ from django.views import generic
 from django.views.generic.base import TemplateView
 from django.views.generic.list import ListView
 
+import json
 
 # project
 from importer.models import *
 
 
 class HomePageView(TemplateView):
+    # welcome page for new users
+    
     template_name = "frontend/home.html"
+
+    # if Flight.objects.exists():
+    #     template_name = "frontend/home.html"
+    # else:
+    #     template_name = "frontend/home_welcome.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        
         # Flight object manager shortcut
-        fm = Flight.objects
-
+        fm = Flight.objects        
+        
+        # empty flight db
+        if not fm.count():
+            return {}
+        
         # get total values over all flights
         total = {}
         total["flights"] = fm.get_flights_total()

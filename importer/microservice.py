@@ -20,23 +20,22 @@ class MicroserviceInterface():
             params={'lat': lat, 'lon': lon} )
         return json.loads(response.text)
 
-    def xcmetrics_service(self,igc_file):
-        return self.send_file_to_microservice(igc_file,self.XCMETRICS_URL)
+    def xcmetrics_service(self,igc_StringIO):
+        return self.send_file_to_microservice(igc_StringIO,self.XCMETRICS_URL)
 
-    def xcscore_service(self,igc_file):
-        return self.send_file_to_microservice(igc_file,self.XCSCORE_URL)
+    def xcscore_service(self,igc_StringIO):
+        return self.send_file_to_microservice(igc_StringIO,self.XCSCORE_URL)
 
     @staticmethod
-    def send_file_to_microservice(igc_file,service_url):
+    def send_file_to_microservice(igc_StringIO,service_url):
         """POSTs a file to specified URL, returns JSON response"""
         # open in binary mode, also does seek(0)
-        igc_file.open('rb')
+        igc_StringIO.seek(0)
         # Send the file to the microservice
         response = requests.post(
             service_url,
-            files={'file': igc_file}
+            files = {'file': ('StringIO.igc', igc_StringIO)}
         )
-        igc_file.close()
         if not response.status_code == 200:
             raise Exception("microservice response: %d %s" % (
                 response.status_code, 

@@ -1,14 +1,16 @@
 {
-  "valid": true,
   "info": {
-    "takeoff": {
-      "name": "Col d'Izoard",
-      "country": "fr",
-      "dist": {
-        "value": 70.53027327496399,
-        "unit": "m"
+    "flight": {
+      "date": "2024-08-05",
+      "airtime_str": "6:44:35",
+      "airtime": {
+        "value": 24275.0,
+        "unit": "s"
       },
-      "time": {
+      "glider_type": "OZONE Alpina 4"
+    },
+    "takeoff": {
+      "datetime": {
         "value": "2024-08-05 09:33:15",
         "unit": "UTC"
       },
@@ -26,7 +28,7 @@
       }
     },
     "landing": {
-      "time": {
+      "datetime": {
         "value": "2024-08-05 16:17:50",
         "unit": "UTC"
       },
@@ -41,13 +43,6 @@
       "alt_gnss": {
         "value": 1786.0,
         "unit": "m"
-      }
-    },
-    "flight": {
-      "airtime_str": "6:44:35",
-      "airtime": {
-        "value": 24275.0,
-        "unit": "s"
       }
     },
     "thermals": {
@@ -74,6 +69,14 @@
       "circ_dir_LR": {
         "value": 0.2697560975609756,
         "unit": "%"
+      },
+      "circ_time_L": {
+        "value": 15.233626869821046,
+        "unit": "s"
+      },
+      "circ_time_R": {
+        "value": 14.410545324654665,
+        "unit": "s"
       }
     },
     "glides": {
@@ -85,6 +88,14 @@
         "value": 38.74671592015784,
         "unit": "km/h"
       }
+    },
+    "recorder": {
+      "type": "Google Pixel 7a 14",
+      "code": "XCT",
+      "gnss": "",
+      "press": "InvenSense 1",
+      "firmware_v": "0.9.11.11",
+      "hardware_v": ""
     }
   },
   "glides": {

@@ -37,11 +37,11 @@
 <div class="row"><div class="col-4">
 <h4>Flight</h4>
 <ul>
-<li>Takeoff {{flight.takeoff.time }} UTC</li>
+<li>Takeoff {{flight.takeoff.datetime }} UTC</li>
 <li>Landing {{flight.landing.time }} UTC</li>
 <li>{{ flight.airtime_str }} h</li>
 <li>{{flight.takeoff.country.upper}} {{flight.takeoff.name}} (dist {{flight.takeoff.dist|floatformat}} m)</li>
-<li>{{ flight.xcscore.type }} {{ flight.xcscore.score }} p</li>
+<li>{{ flight.xcscore.distance }} km {{ flight.xcscore.scoringName }}</li>
 </ul>
 <h4>Thermals</h4>
 <ul>

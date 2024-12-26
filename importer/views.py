@@ -5,13 +5,13 @@ import io
 
 from django.core.files import File
 from django.shortcuts import render, redirect
-from django.core.exceptions import ValidationError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib import messages
 from django.urls import reverse
 
 from .forms import FileUploadForm
 from .models import *
+from .flight_create import CreateFlight
 
 def upload_file(request):
     """IGC upload handler, accepts
@@ -23,21 +23,23 @@ def upload_file(request):
         form = FileUploadForm(request.POST, request.FILES)
         if form.is_valid():
             uploaded_file = request.FILES['file']
-        try:
             messages.success(request, f'uploaded {uploaded_file.name}')
+
             if uploaded_file.name.lower().endswith('.igc'):
-                spawn_flight(request,uploaded_file)
+                # copy file content to StringIO object
+                file_data = uploaded_file.read().decode('ascii')
+                igc_StringIO = io.StringIO()
+                igc_StringIO.write(file_data)
+                spawn_flight(request,igc_StringIO,uploaded_file.name)
 
             elif uploaded_file.name.lower().endswith('.zip'):
                 zip_file_iterate(uploaded_file,request)
 
             else:
                 raise Exception(f'Unsupported file type, upload .igc or .zip')
-
-        except Exception as e:
-            messages.error(request, f'Error {e}')
-
-        # return HttpResponseRedirect(reverse("frontend:flight_list"))
+        else:
+            # pressed upload button without selecting file
+            form = FileUploadForm()
     else:
         # show upload form
         form = FileUploadForm()
@@ -62,20 +64,22 @@ def zip_file_iterate(zip_file,request):
                 try:
                     file_data = file.read().decode('ascii')
                 except UnicodeDecodeError:
-                    messages.warning(request, f'{file_name} Skipping non-ASCII file')
+                    messages.warning(request, 
+                                     f'{file_name} Skipping non-ASCII file')
                     continue
             
             # make a file-like object from asii file_data
-            tmp = io.StringIO()
-            tmp.write(file_data)
-            # Wrap it in a Django File object
-            spawn_flight(request,File(tmp,name=file_name))
+            igc_StringIO = io.StringIO()
+            igc_StringIO.write(file_data)
+            spawn_flight(request,igc_StringIO,file_name)
 
-def spawn_flight(request,file):
+def spawn_flight(request,igc_StringIO,file_name):
+    cf = CreateFlight()
     try:
-        flight = Flight.objects.create()
-        flight.init_from_file(file)
-        messages.success(request, f'OK {file.name}: {flight.__str__()}')
+        flight = cf.main(igc_StringIO)
+        messages.success(request, f'OK {file_name}: {flight.__str__()}')
+        
     except Exception as e:
-        flight.delete()
-        messages.error(request, f'Error {file.name}: {e.__str__()}')
+        messages.error(
+            request, 
+            f' {file_name} ({e.__str__()})')

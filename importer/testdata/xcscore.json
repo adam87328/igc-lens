@@ -1,0 +1,279 @@
+{
+  "solution": {
+    "launch": [
+      {
+        "fix": 0,
+        "time": "09:33:15"
+      }
+    ],
+    "landing": [
+      {
+        "fix": "n-0",
+        "time": "16:18:12"
+      }
+    ],
+    "legs": [
+      {
+        "name": "TP1 : TP2",
+        "distance": "37.05",
+        "earthDistance": "37.053"
+      },
+      {
+        "name": "TP2 : TP3",
+        "distance": "51.22",
+        "earthDistance": "51.223"
+      },
+      {
+        "name": "TP3 : TP1",
+        "distance": "44.05",
+        "earthDistance": "44.052"
+      }
+    ],
+    "bestSolution": {
+      "optimal": true,
+      "scoringName": "Closed FAI Triangle",
+      "score": 208.94,
+      "distance": 132.32,
+      "multiplier": 1.6,
+      "closingDistance": 1.73,
+      "penalty": 1.73,
+      "potentialMaxScore": null
+    }
+  },
+  "geojson": {
+    "type": "FeatureCollection",
+    "properties": {
+      "name": "EPSG:3857",
+      "id": 1369,
+      "score": 208.94,
+      "bound": 208.96,
+      "optimal": true,
+      "processedTime": 0.161,
+      "processedSolutions": 802,
+      "type": "Closed FAI Triangle",
+      "code": "fai"
+    },
+    "features": [
+      {
+        "type": "Feature",
+        "id": "tp0",
+        "properties": {
+          "id": "tp0",
+          "r": 2572,
+          "timestamp": 1722852988000
+        },
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            6.856316666666666,
+            44.823166666666665
+          ]
+        }
+      },
+      {
+        "type": "Feature",
+        "id": "seg0",
+        "properties": {
+          "id": "seg0",
+          "stroke": "yellow",
+          "stroke-width": 4,
+          "d": 37.053378576870635
+        },
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              6.856316666666666,
+              44.823166666666665
+            ],
+            [
+              6.422916666666667,
+              44.9506
+            ]
+          ],
+          "style": {
+            "stroke": "yellow",
+            "stroke-width": 4
+          }
+        }
+      },
+      {
+        "type": "Feature",
+        "id": "tp1",
+        "properties": {
+          "id": "tp1",
+          "r": 10341,
+          "timestamp": 1722860769000
+        },
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            6.422916666666667,
+            44.9506
+          ]
+        }
+      },
+      {
+        "type": "Feature",
+        "id": "seg1",
+        "properties": {
+          "id": "seg1",
+          "stroke": "yellow",
+          "stroke-width": 4,
+          "d": 51.222909683975885
+        },
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              6.422916666666667,
+              44.9506
+            ],
+            [
+              6.540066666666666,
+              44.497283333333336
+            ]
+          ],
+          "style": {
+            "stroke": "yellow",
+            "stroke-width": 4
+          }
+        }
+      },
+      {
+        "type": "Feature",
+        "id": "tp2",
+        "properties": {
+          "id": "tp2",
+          "r": 20593,
+          "timestamp": 1722871021000
+        },
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            6.540066666666666,
+            44.497283333333336
+          ]
+        }
+      },
+      {
+        "type": "Feature",
+        "id": "seg2",
+        "properties": {
+          "id": "seg2",
+          "stroke": "yellow",
+          "stroke-width": 4,
+          "d": 44.05195286886922
+        },
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              6.540066666666666,
+              44.497283333333336
+            ],
+            [
+              6.856316666666666,
+              44.823166666666665
+            ]
+          ],
+          "style": {
+            "stroke": "yellow",
+            "stroke-width": 4
+          }
+        }
+      },
+      {
+        "type": "Feature",
+        "id": "cp_in",
+        "properties": {
+          "id": "cp_in",
+          "r": 1069,
+          "timestamp": 1722851485000
+        },
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            6.743433333333334,
+            44.80815
+          ]
+        }
+      },
+      {
+        "type": "Feature",
+        "id": "cp_out",
+        "properties": {
+          "id": "cp_out",
+          "r": 24070,
+          "timestamp": 1722874498000
+        },
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            6.736816666666667,
+            44.7933
+          ]
+        }
+      },
+      {
+        "type": "Feature",
+        "id": "closing",
+        "properties": {
+          "id": "closing",
+          "stroke": "green",
+          "stroke-width": 3,
+          "d": 1.7312866315715014
+        },
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              6.743433333333334,
+              44.80815
+            ],
+            [
+              6.736816666666667,
+              44.7933
+            ]
+          ],
+          "style": {
+            "stroke": "green",
+            "stroke-width": 3
+          }
+        }
+      },
+      {
+        "type": "Feature",
+        "id": "launch0",
+        "properties": {
+          "id": "launch0",
+          "r": 0,
+          "timestamp": 1722850395000
+        },
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            6.7287,
+            44.819066666666664
+          ]
+        }
+      },
+      {
+        "type": "Feature",
+        "id": "land0",
+        "properties": {
+          "id": "land0",
+          "r": 24264,
+          "timestamp": 1722874692000
+        },
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            6.734466666666666,
+            44.791916666666665
+          ]
+        }
+      }
+    ]
+  }
+}

@@ -53,11 +53,11 @@
   <tbody>
     {% for flight in flights %}
     <tr>
-        <td>{{ flight.takeoff.time.date }}</td>
-        <td>{{ flight.takeoff.time|time:"H:i" }}</td>
+        <td>{{ flight.takeoff.datetime.date }}</td>
+        <td>{{ flight.takeoff.datetime|time:"H:i" }}</td>
         <td>{{ flight.airtime_str }}</td>
-        <td>{{ flight.takeoff.country|upper }}</td>
-        <td>{{ flight.takeoff.name|default:"N/A" }}</td>
+        <td>{{ flight.takeoff.country_code|upper }}</td>
+        <td>{%if flight.takeoff.name %} {{ flight.takeoff.name }} {% else %}N/A ({{ flight.takeoff.state }}){% endif %}</td>
         <td>{{ flight.xcscore.score|floatformat:0 }}</td>
         <td><a href="{% url 'frontend:flight_detail' flight.id %}">{{ flight.file_hash_short}}</a></td>
         </a>

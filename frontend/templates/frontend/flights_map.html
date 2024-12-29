@@ -1,21 +1,50 @@
-{% extends 'main.html' %}
-{% load leaflet_tags %}
-{% load static %}
 
+{% extends "main.html" %}
 {% block head %}
-  {% leaflet_js %}
-  {% leaflet_css %}
-{% endblock %}
-
-{% block content %}
+<link rel="stylesheet" 
+href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+crossorigin=""/>
 <style>
-  #map { height: 600px; }
+html, body {
+    height: 100%; /* Make sure the body and html are 100% height */
+}
+body {
+    display: flex;
+    flex-direction: column; /* Enable flexbox on body */
+}
+.container-fluid {
+    flex-grow: 1; /* Make the container take up remaining space */
+    position: relative; /* Ensures that the button is positioned relative to this container */
+}
 </style>
-
-<script>
-  feature_list = {{ latLon | safe }};
+{% endblock %}
+{% block content %}
+<!-- leaflet container -->
+<div class="container-fluid d-flex align-items-center justify-content-center p-0">
+    <div id="map" style="width: 100%; height: 100%;"></div>
+</div>
+<!-- leaflet -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin="">
 </script>
-<script src=" {% static 'leaflet_map_flights.js' %}"></script>
-
-{% leaflet_map 'map' callback='window.map_init' %}
+<!-- bootstrap -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" 
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" 
+    crossorigin="anonymous">
+</script>
+<!-- leaflet map -->
+{% load static %}
+<script>
+    const iconUrlLocalFlight = "{%static 'icons/local_flight.svg'%}";
+    const iconUrlFreeFlight = "{%static 'icons/free_flight.svg'%}";
+    const iconUrlFreeTriangle = "{%static 'icons/free_triangle.svg'%}";
+    const iconUrlFAITriangle = "{%static 'icons/fai_triangle.svg'%}";
+    const iconUrlClosedFreeTriangle = "{%static 'icons/closed_free_triangle.svg'%}";
+    const iconUrlClosedFAITriangle = "{%static 'icons/closed_fai_triangle.svg'%}";
+    // Marker data
+    const markerList = {{ marker_list|safe }};
+</script>
+<script src="{% static 'map_markers.js' %}"></script>
 {% endblock %}

@@ -1,17 +1,22 @@
 {% extends "main.html" %}
-{% block title %}
-Upload
-{% endblock %}
 
 {% block content %}
 <div class="container mt-3">
 <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    <div class="mb-3">
-        <label for="formFile" class="form-label">Choose either a single .igc file, or a .zip archive containing .igc-files.</label>
-        <input class="form-control" type="file" id="formFile" name="file">
+    <div class="row g-3 align-items-center">
+        <div class="col-auto">
+            <input class="form-control" type="file" id="formFile" name="file">
+        </div>
+        <div class="col-auto">
+            <span id="passwordHelpInline" class="form-text">
+                .igc or .zip containing .igc
+            </span>
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-primary">Upload</button>
+        </div>
     </div>
-    <button type="submit" class="btn btn-primary">Upload</button>
 </form>
 </div>
 

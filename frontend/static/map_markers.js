@@ -1,0 +1,89 @@
+// Wait for the window to load
+window.onload = function() {
+    // Initial coordinates and zoom level
+    const map = L.map('map').setView([45.76397244171168, 10.80946047593702], 6);
+
+    // 2. Add a tile layer (OpenStreetMap, or another provider)
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    // 3. Define custom icons
+    const iconLocalFlight = L.icon({
+        iconUrl: iconUrlLocalFlight,
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34]
+    });
+
+    const iconFreeFlight = L.icon({
+        iconUrl: iconUrlFreeFlight,
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34]
+    });
+
+    const iconFreeTriangle = L.icon({
+        iconUrl: iconUrlFreeTriangle,
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34]
+    });
+
+    const iconFAITriangle = L.icon({
+        iconUrl: iconUrlFAITriangle,
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34]
+    });
+
+    const iconClosedFreeTriangle = L.icon({
+        iconUrl: iconUrlClosedFreeTriangle,
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34]
+    });
+
+    const iconClosedFAITriangle = L.icon({
+        iconUrl: iconUrlClosedFAITriangle,
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34]
+    });
+
+    // 4. Add an event listener for the 'load' event
+    map.on('load', function() {
+
+        // 5. Add markers to the map after the map has fully loaded
+        markerList.forEach(markerData => {
+            const coordinates = markerData.geometry.coordinates;
+            const popupContent = markerData.properties.popupContent;
+            const markerType = markerData.properties.markerType;
+
+            // Choose the icon based on the 'type' property
+            let chosenIcon;
+            if (markerType === 'Local Flight') {
+                chosenIcon = iconLocalFlight;
+            } else if (markerType === 'Free Flight') {
+                chosenIcon = iconFreeFlight;
+            } else if (markerType === 'Free Triangle') {
+                chosenIcon = iconFreeTriangle;
+            }else if (markerType === 'FAI Triangle') {
+                chosenIcon = iconFAITriangle;
+            }else if (markerType === 'Closed Free Triangle') {
+                chosenIcon = iconClosedFreeTriangle;
+            }else if (markerType === 'Closed FAI Triangle') {
+                chosenIcon = iconClosedFAITriangle;
+            }
+            // Create a marker with the selected custom icon and add it to the map
+            L.marker([coordinates[1], coordinates[0]], { icon: chosenIcon })
+                .addTo(map)
+                .bindPopup(popupContent); // Bind a popup with the provided content
+        });
+    });
+
+    // 6. Trigger the 'load' event manually once the tile layer is added
+    map.whenReady(function() {
+        map.fire('load');
+    });
+};

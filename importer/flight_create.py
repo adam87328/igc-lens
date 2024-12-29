@@ -17,6 +17,7 @@ class CreateFlight():
         lon = flight.takeoff.lon
         self.assign_geocode(flight,lat,lon)
         self.assign_takeoffdb(flight,lat,lon)
+        self.dependent_variables(flight)
         self.save_models(flight)
         return flight
 
@@ -79,7 +80,8 @@ class CreateFlight():
         # set remaining properties manually
         flight.glides.geojson =                 json_data["glides"]
         flight.thermals.geojson =               json_data["thermals"]
-    
+        flight.timeseries =                     json_data["timeseries"]
+
     @staticmethod
     def assign_xcscore(flight,igc_StringIO):
         msi = MicroserviceInterface()
@@ -106,3 +108,9 @@ class CreateFlight():
         json_data = msi.takeoffdb_service(lat,lon)
         # unpack json data into one-to-one properties
         flight.takeoff._assign_props_from_json(json_data)
+
+    @staticmethod
+    def dependent_variables(flight):
+        """Computations which depend on multiple sources"""
+        flight.xcscore.xc_speed_airtime = \
+            flight.xcscore.distance / flight.airtime/3600 # km/h

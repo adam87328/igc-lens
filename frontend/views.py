@@ -63,8 +63,8 @@ class FlightListMap(TemplateView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["latLon"] = \
-            [f.to_geojson_feature_point for f in Flight.objects.all()]
+        context["marker_list"] = \
+            [f.takeoff_marker() for f in Flight.objects.all()]
         return context
 
 
@@ -105,4 +105,9 @@ class FlightDetail(generic.DetailView):
         # ensure correct booleans for JS, true vs True in python
         d = self.object.xcscore.geojson
         context["xcscore_layer"] = json.dumps(d)
+        # map bounding box
+        lat = self.object.timeseries['lat']
+        lon = self.object.timeseries['lon']
+        context["corner_NE"] = [max(lat),max(lon)]
+        context["corner_SW"] = [min(lat),min(lon)]
         return context

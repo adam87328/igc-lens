@@ -34,9 +34,7 @@ INTERNAL_IPS = [
 # Application definition
 
 INSTALLED_APPS = [
-    'leaflet',
     'djgeojson',
-    'bootstrap5',
     'debug_toolbar',
     'frontend.apps.FrontendConfig',
     'importer.apps.ImportIgcConfig',
@@ -131,34 +129,3 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-LEAFLET_CONFIG = {
-    'MINIMAP': True,
-    'RESET_VIEW': False,
-    'TILES': [
-        ('openstreetmap', 
-         'https://tile.openstreetmap.org/{z}/{x}/{y}.png', 
-         {'attribution': '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-          'maxZoom': 17}),
-        ('opentopomap', 
-         'https://tile.opentopomap.org/{z}/{x}/{y}.png', 
-         {'attribution': '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)', 
-          'maxZoom': 17}),
-        ('basemap.at terrain', 
-         'https://mapsneu.wien.gv.at/basemap/bmapgelaende/grau/google3857/{z}/{y}/{x}.jpeg', 
-         {'attribution': 'Datenquelle: <a href="https://www.basemap.at">basemap.at</a>', 
-          'maxZoom': 19}),
-        ('basemap.at surface',
-         'https://mapsneu.wien.gv.at/basemap/bmapoberflaeche/grau/google3857/{z}/{y}/{x}.jpeg', 
-         {'attribution': 'Datenquelle: <a href="https://www.basemap.at">basemap.at</a>', 
-          'maxZoom': 19}),
-        ('basemap.at highDPI',
-         'https://mapsneu.wien.gv.at/basemap/bmaphidpi//grau/google3857/{z}/{y}/{x}.jpeg', 
-         {'attribution': 'Datenquelle: <a href="https://www.basemap.at">basemap.at</a>', 
-          'maxZoom': 19}),
-        ('swisstopo',
-         'https://wmts.geo.admin.ch/1.0.0/ch.swisstopo.pixelkarte-farbe/default/current/3857/{z}/{x}/{y}.jpeg', 
-         {'attribution': '&copy; <a href="https://www.swisstopo.admin.ch/">swisstopo</a>', 
-          'maxZoom': 18}),
-    ]
-}

@@ -118,32 +118,41 @@ class Flight(JSONModel):
     # "glider_type": "OZONE Alpina 4"
     glider = models.CharField(max_length=255)
 
+    # flight as timeseries - unfortunately there is no field for lists
+    timeseries = models.JSONField()
 
-    @property
-    def airtime_str(self):
-        """format self.airtime into hh:mm:ss"""
-        return str(timedelta(seconds=self.airtime))
-
-    @property
-    def to_geojson_feature_point(self):
+    def takeoff_marker(self):
         if not self.takeoff:
             return {}
         popup = f"<ul>\
             <li>{self.takeoff.datetime.date()}</li>\
             <li>{self.airtime_str} h</li>\
             <li>{self.xcscore.scoringName} {self.xcscore.score} p</li>\
-            <li>{self._a_href('Flight detail')}</li>\
+            <li>{self.link_detail('Flight detail')}</li>\
             </ul>"
+
         return {
             "type": "Feature",
             "properties": {
-                "popupContent": popup
+                "popupContent": popup,
+                "markerType" : self.xcscore.scoringName,
             },
             "geometry": {
                 "type": "Point",
                 "coordinates": [self.takeoff.lon, self.takeoff.lat]
             }
         }
+
+    def link_detail(self,link_text):
+        """Return a html link element to this flights detail page"""
+        return f'<a href=" \
+            {reverse('frontend:flight_detail', args=[self.id])}"> \
+            {link_text}</a>'
+
+    @property
+    def airtime_str(self):
+        """format self.airtime into hh:mm:ss"""
+        return str(timedelta(seconds=self.airtime))
         
     @property
     def file_hash_short(self):
@@ -153,17 +162,12 @@ class Flight(JSONModel):
             return self.hash[:6]
         return ""
 
-    def _a_href(self,link_text):
-        """Return a html link element to this flights detail page"""
-        return f'<a href=" \
-            {reverse('frontend:flight_detail', args=[self.id])}"> \
-            {link_text}</a>'
-
     def __str__(self):
         s = ''
         s += f" {self.takeoff}" if hasattr(self,"takeoff") else ""
         s += f" {self.xcscore}" if hasattr(self,"xcscore") else ""
         return s
+
 
 class Recorder(JSONModel):
     """ igc flight recorder """
@@ -228,6 +232,13 @@ class XCScore(JSONModel):
     penalty = models.FloatField(null=True)
     # "potentialMaxScore": null
     potentialMaxScore = models.FloatField(null=True)
+
+    # -- dependent properties --
+
+    # average XC speed of entire flight: distance / airtime
+    xc_speed_airtime = models.FloatField()
+    # average XC speed over section of flight relevant for scoring
+    # todo, maybe directly in igc-xc-score
 
     def __str__(self):
         s = f"{self.distance:.1f} km {self.scoringName} "

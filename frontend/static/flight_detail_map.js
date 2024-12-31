@@ -123,15 +123,23 @@ window.onload = function() {
         style: style_xcscore,
         onEachFeature: onEachFeature
     });
-    const glides = L.geoJSON(geoGlides, {
-        style: glideStyle,
-        onEachFeature: onEachGlide
-    });
-    const thermals = L.geoJSON(geoThermals, {
-        style: thermalStyle,
-        onEachFeature: onEachThermal
-    });
-    const track = L.layerGroup([glides,thermals]);
+    
+    // short flights might have just one glide, or one thermal?
+    const track = L.layerGroup();
+    if (Object.keys(geoGlides).length > 0) {
+        const glides = L.geoJSON(geoGlides, {
+            style: glideStyle,
+            onEachFeature: onEachGlide
+        });
+        track.addLayer(glides);
+    }
+    if (Object.keys(geoThermals).length > 0) {
+        const thermals = L.geoJSON(geoThermals, {
+            style: thermalStyle,
+            onEachFeature: onEachThermal
+        });
+        track.addLayer(thermals);
+    }
 
     // groups for layer control
     const baseMaps = {

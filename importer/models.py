@@ -349,9 +349,14 @@ class Landing(JSONModel):
     # }
     alt_gnss = models.FloatField()
 
+    def __str__(self):
+        s = f"{str(self.datetime.time())}"
+        return s
+
 class Thermals(JSONModel):
     # belongs to flight
     parent = models.OneToOneField(Flight, on_delete=models.CASCADE)
+
     # GeoJSON data
     geojson = models.JSONField(null=True)
 
@@ -399,6 +404,9 @@ class Thermals(JSONModel):
     # }
     circ_time_R = models.FloatField()
 
+    def is_empty(self):
+        return self.time_total == 0
+
 class Glides(JSONModel):
     # belongs to flight
     parent = models.OneToOneField(Flight, on_delete=models.CASCADE)
@@ -418,3 +426,6 @@ class Glides(JSONModel):
     #   "unit": "km/h"
     # }
     avg_speed = models.FloatField()
+
+    def is_empty(self):
+        return self.time_total == 0

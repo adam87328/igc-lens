@@ -13,15 +13,12 @@ import re
 from importer.models import *
 from frontend.models import *
 
-class HomePageView(TemplateView):
-    # welcome page for new users
-    
-    template_name = "frontend/home.html"
+class HomepageView(TemplateView):
+    template_name = "frontend/homepage.html"
 
-    # if Flight.objects.exists():
-    #     template_name = "frontend/home.html"
-    # else:
-    #     template_name = "frontend/home_welcome.html"
+
+class StatisticsView(TemplateView):
+    template_name = "frontend/statistics.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -58,7 +55,7 @@ class HomePageView(TemplateView):
         return context
     
 
-class FlightDetail(generic.DetailView):
+class FlightDetailView(generic.DetailView):
     """Detail view of one flight, includes map and textual data"""
     model = Flight
     template_name = "frontend/flight_detail.html"

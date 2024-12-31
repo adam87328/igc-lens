@@ -1,5 +1,9 @@
-
 {% extends "main.html" %}
+
+{% block navbar %}
+{% include "filter_form.html" %}
+{% endblock %}
+
 {% block head %}
 <link rel="stylesheet" 
 href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -39,10 +43,10 @@ body {
 <script>
     const iconUrlLocalFlight = "{%static 'icons/local_flight.svg'%}";
     const iconUrlFreeFlight = "{%static 'icons/free_flight.svg'%}";
-    const iconUrlFreeTriangle = "{%static 'icons/free_triangle.svg'%}";
-    const iconUrlFAITriangle = "{%static 'icons/fai_triangle.svg'%}";
-    const iconUrlClosedFreeTriangle = "{%static 'icons/closed_free_triangle.svg'%}";
-    const iconUrlClosedFAITriangle = "{%static 'icons/closed_fai_triangle.svg'%}";
+    const iconUrlFlatTriangle = "{%static 'icons/flat_triangle.svg'%}";
+    const iconUrlFaiTriangle = "{%static 'icons/fai_triangle.svg'%}";
+    const iconUrlClosedFlatTriangle = "{%static 'icons/closed_flat_triangle.svg'%}";
+    const iconUrlClosedFaiTriangle = "{%static 'icons/closed_fai_triangle.svg'%}";
     // Marker data
     const markerList = {{ marker_list|safe }};
 </script>

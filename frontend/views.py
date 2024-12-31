@@ -7,10 +7,11 @@ from django.views.generic.base import TemplateView
 from django.views.generic.list import ListView
 
 import json
+import re
 
 # project
 from importer.models import *
-
+from frontend.models import *
 
 class HomePageView(TemplateView):
     # welcome page for new users
@@ -55,45 +56,7 @@ class HomePageView(TemplateView):
         context["per_year"] = per_year
         context["total"] = total
         return context
-
-
-class FlightListMap(TemplateView):
-    """A map where each flight is represented as marker"""
-    template_name = "frontend/flights_map.html"
     
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["marker_list"] = \
-            [f.takeoff_marker() for f in Flight.objects.all()]
-        return context
-
-
-class FlightListView(ListView):
-    """A table where each flight is a row"""
-    model = Flight
-    paginate_by = 20
-    template_name = "frontend/flights_list.html"
-    context_object_name = 'flights'
-
-    def get_queryset(self):
-        # Apply ordering to the queryset to prevent UnorderedObjectListWarning
-        
-        # Radio buttons: Get the 'filter' value from the GET request
-        filter_value = self.request.GET.get('filter', 'all')
-        # Apply filters based on the radio button value
-        if filter_value == 'xc':
-            queryset = Flight.objects.get_only_xc().order_by('id')
-        else:
-            queryset = Flight.objects.order_by('id')
-
-        return queryset
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        # Add the current filter to the context so you can use it in the template
-        context['current_filter'] = self.request.GET.get('filter', 'all')
-        return context
-
 
 class FlightDetail(generic.DetailView):
     """Detail view of one flight, includes map and textual data"""
@@ -110,4 +73,71 @@ class FlightDetail(generic.DetailView):
         lon = self.object.timeseries['lon']
         context["corner_NE"] = [max(lat),max(lon)]
         context["corner_SW"] = [min(lat),min(lon)]
+        return context
+    
+
+class FlightListView(ListView):
+    """A table where each flight is a row"""
+    model = Flight
+    context_object_name = 'flights'
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        for value, filter in FlightFilter.objects.get().active.items():
+
+            if filter == 'xc_dist':
+                # extract number
+                match = re.search(r'\d+', value)
+                qs = qs.filter(xcscore__distance__gt=int(match.group()))
+
+            if filter == 'airtime':
+                match = re.search(r'\d+', value)
+                sec = 3600*int(match.group()) # hours to sec
+                qs = qs.filter(airtime__gt=sec)
+
+            if filter == 'takeoff':
+                qs = qs.filter(takeoff__name=value)
+
+            if filter == 'scoring_name':
+                qs = qs.filter(xcscore__scoringName=value)
+
+            #qs = qs.filter(xcscore__xc_speed_airtime__gt=15)
+
+        return qs.order_by('id')
+
+    def get(self, request, *args, **kwargs):
+        # Store the checkbox value in the session if submitted
+        if 'flightFilter' in request.GET:
+            filter_verbose_name = request.GET.get('flightFilter')
+            FlightFilter.objects.get().set_filter(filter_verbose_name)
+
+        if 'reset' in request.GET:
+            o = FlightFilter.objects.get()
+            o.active = {}
+            o.save()
+
+        return super().get(request, *args, **kwargs)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # todo: get FlightFilter for current user
+        context['filter_all'] = list(FlightFilter.objects.get().all)
+        context['filter_active'] = list(FlightFilter.objects.get().active)
+        return context
+
+
+class FlightTableView(FlightListView):
+    """A classic table"""
+    template_name = "frontend/flights_table.html"
+    paginate_by = 20
+
+
+class FlightMapView(FlightListView):
+    """A map where each flight is represented as marker"""
+    template_name = "frontend/flights_map.html"
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["marker_list"] = \
+            [f.takeoff_marker() for f in super().get_queryset()]
         return context

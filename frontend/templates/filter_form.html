@@ -1,0 +1,17 @@
+<form class="d-flex" role="search" method="GET">
+  <input class="form-control me-2" type="search" list="datalistOptions" id="flightFilter" name="flightFilter" placeholder="Filter">
+  <datalist id="datalistOptions">
+  {% for option in filter_all %}
+    <option value="{{option}}">
+  {%endfor%}
+    </datalist>
+  <button class="btn btn-outline-success me-2" name="apply" type="submit">Apply</button>
+  <button class="btn btn-outline-secondary position-relative" name="reset" type="submit">
+    Reset
+    {%if filter_active%}
+    <span class="position-absolute top-0 start-100 translate-middle p-2 bg-warning border border-light rounded-circle">
+      <span class="visually-hidden">Filter active</span>
+    </span>
+    {%endif%}
+  </button>
+</form>

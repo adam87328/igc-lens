@@ -113,4 +113,4 @@ class CreateFlight():
     def dependent_variables(flight):
         """Computations which depend on multiple sources"""
         flight.xcscore.xc_speed_airtime = \
-            flight.xcscore.distance / flight.airtime/3600 # km/h
+            flight.xcscore.distance / (flight.airtime / 3600) # km/h

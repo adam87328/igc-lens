@@ -79,19 +79,15 @@ class FlightManager(models.Manager):
         q = Flight.objects.filter(takeoff__datetime__year=year)
         return q.count()
     
-    def get_only_xc(self):
-        """Derive a boolean whether the flight is a local flight, or XC"""
-        # todo: once we have xc distance from igc-xc-score, use instad
-        # of points
-        q = Flight.objects.annotate(
-            xc_km_per_hour=ExpressionWrapper(
-                F('xcscore__distance') / ( F('airtime') / 3600),
-                output_field=FloatField()))
-        # todo: threshold should be a setting, perhaps user-tunable?
-        q = q.filter(xc_km_per_hour__gt=15)
-        # exclude short straight flights
-        q = q.filter(xcscore__distance__gt=10)
-        return q
+#    def get_only_xc(self):
+#        """Derive a boolean whether the flight is a local flight, or XC"""
+#        # todo: once we have xc distance from igc-xc-score, use instad
+#        # of points
+#        q = Flight.objects.annotate(
+#            xc_km_per_hour=ExpressionWrapper(
+#                F('xcscore__distance') / ( F('airtime') / 3600),
+#                output_field=FloatField()))
+
 
 # Create your models here.
 class Flight(JSONModel):
@@ -130,12 +126,15 @@ class Flight(JSONModel):
             <li>{self.xcscore.scoringName} {self.xcscore.score} p</li>\
             <li>{self.link_detail('Flight detail')}</li>\
             </ul>"
-
+        if self.xcscore.is_local():
+            marker_type = "Local Flight"
+        else:
+            marker_type = self.xcscore.scoringName
         return {
             "type": "Feature",
             "properties": {
                 "popupContent": popup,
-                "markerType" : self.xcscore.scoringName,
+                "markerType" : marker_type,
             },
             "geometry": {
                 "type": "Point",
@@ -239,6 +238,25 @@ class XCScore(JSONModel):
     xc_speed_airtime = models.FloatField()
     # average XC speed over section of flight relevant for scoring
     # todo, maybe directly in igc-xc-score
+
+    def is_local(self):
+        """Derive a boolean whether or not the flight is cross-country
+        
+        Even though the xc score properties are computed for any track, it
+        makes sense to introduce a category 'local flight' in addition to the 
+        scoringName categories (triangle etc).
+
+        The definition here is:
+        - A minimum XC speed, which signifies the attempt to go somewhere, 
+          vs. a confused chicken groundtrack.
+        - And a minimum XC distance. This excludes flights which are just 
+          straight line down a mountain, and thus have good XC speed.
+        """
+        # todo: settings
+        return not(
+                    self.xc_speed_airtime >= 12 # km/h
+                    and self.distance >= 10 # km
+                )
 
     def __str__(self):
         s = f"{self.distance:.1f} km {self.scoringName} "

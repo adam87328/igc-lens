@@ -36,6 +36,7 @@ INTERNAL_IPS = [
 INSTALLED_APPS = [
     'djgeojson',
     'debug_toolbar',
+    'django_extensions',
     'frontend.apps.FrontendConfig',
     'importer.apps.ImportIgcConfig',
     'django.contrib.admin',

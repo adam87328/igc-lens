@@ -21,12 +21,8 @@
     </div>
     <div class="col-11">
         <div class="progress" 
-             role="progressbar" 
-             aria-label="{{ year }}" 
-             aria-valuenow="{{ vals.airtime.rel }}" 
-             aria-valuemin="0" 
-             aria-valuemax="100">
-            <div class="progress-bar" style="width: {{ vals.airtime.rel }}%">
+             role="progressbar">
+            <div class="progress-bar" style="width: {{ vals.airtime.rel }}%"> 
                 {{ vals.airtime.abs|floatformat }} h 
             </div>
         </div>
@@ -42,11 +38,7 @@
     </div>
     <div class="col-11">
         <div class="progress" 
-             role="progressbar" 
-             aria-label="{{ year }}" 
-             aria-valuenow="{{ vals.flights.rel }}" 
-             aria-valuemin="0" 
-             aria-valuemax="100">
+             role="progressbar">
             <div class="progress-bar" style="width: {{ vals.flights.rel }}%">
                 {{ vals.flights.abs|floatformat }}
             </div>

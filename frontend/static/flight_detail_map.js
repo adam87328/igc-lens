@@ -110,9 +110,9 @@ window.onload = function() {
     function thermalStyle(feature) {
         let x = feature.properties.vertical_velocity;
         // categorize
-        if ( x > 2.5 ) {
+        if ( x > 2.0 ) {
             return styleGood;
-        } else if ( x > 1.5 ) {
+        } else if ( x > 1.0 ) {
             return styleNeutral;
         } else {
             return styleBad;

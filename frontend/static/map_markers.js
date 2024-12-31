@@ -12,42 +12,42 @@ window.onload = function() {
     const iconLocalFlight = L.icon({
         iconUrl: iconUrlLocalFlight,
         iconSize: [25, 41],
-        iconAnchor: [12, 41],
+        iconAnchor: [0, 41],
         popupAnchor: [1, -34]
     });
 
     const iconFreeFlight = L.icon({
         iconUrl: iconUrlFreeFlight,
         iconSize: [25, 41],
-        iconAnchor: [12, 41],
+        iconAnchor: [0, 41],
         popupAnchor: [1, -34]
     });
 
-    const iconFreeTriangle = L.icon({
-        iconUrl: iconUrlFreeTriangle,
+    const iconFlatTriangle = L.icon({
+        iconUrl: iconUrlFlatTriangle,
         iconSize: [25, 41],
-        iconAnchor: [12, 41],
+        iconAnchor: [0, 41],
         popupAnchor: [1, -34]
     });
 
-    const iconFAITriangle = L.icon({
-        iconUrl: iconUrlFAITriangle,
+    const iconFaiTriangle = L.icon({
+        iconUrl: iconUrlFaiTriangle,
         iconSize: [25, 41],
-        iconAnchor: [12, 41],
+        iconAnchor: [0, 41],
         popupAnchor: [1, -34]
     });
 
-    const iconClosedFreeTriangle = L.icon({
-        iconUrl: iconUrlClosedFreeTriangle,
+    const iconClosedFlatTriangle = L.icon({
+        iconUrl: iconUrlClosedFlatTriangle,
         iconSize: [25, 41],
-        iconAnchor: [12, 41],
+        iconAnchor: [0, 41],
         popupAnchor: [1, -34]
     });
 
-    const iconClosedFAITriangle = L.icon({
-        iconUrl: iconUrlClosedFAITriangle,
+    const iconClosedFaiTriangle = L.icon({
+        iconUrl: iconUrlClosedFaiTriangle,
         iconSize: [25, 41],
-        iconAnchor: [12, 41],
+        iconAnchor: [0, 41],
         popupAnchor: [1, -34]
     });
 
@@ -67,13 +67,15 @@ window.onload = function() {
             } else if (markerType === 'Free Flight') {
                 chosenIcon = iconFreeFlight;
             } else if (markerType === 'Free Triangle') {
-                chosenIcon = iconFreeTriangle;
+                chosenIcon = iconFlatTriangle;
             }else if (markerType === 'FAI Triangle') {
-                chosenIcon = iconFAITriangle;
+                chosenIcon = iconFaiTriangle;
             }else if (markerType === 'Closed Free Triangle') {
-                chosenIcon = iconClosedFreeTriangle;
+                chosenIcon = iconClosedFlatTriangle;
             }else if (markerType === 'Closed FAI Triangle') {
-                chosenIcon = iconClosedFAITriangle;
+                chosenIcon = iconClosedFaiTriangle;
+            } else {
+                chosenIcon = L.icon()
             }
             // Create a marker with the selected custom icon and add it to the map
             L.marker([coordinates[1], coordinates[0]], { icon: chosenIcon })

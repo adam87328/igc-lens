@@ -9,5 +9,8 @@ class FileUploadForm(forms.Form):
     def clean_file(self):
         file = self.cleaned_data['file']
         if file.size > self.MAX_FILE_SIZE:
-            raise forms.ValidationError(f"File size exceeds {self.MAX_FILE_SIZE / (1024 * 1024)} MB limit.")
+            raise forms.ValidationError(
+                f"File size exceeds \
+                {self.MAX_FILE_SIZE / (1024 * 1024)} \
+                MB limit.")
         return file

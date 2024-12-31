@@ -1,0 +1,33 @@
+/* named colors */
+:root {
+    --custom-sand1: #F7DCCC;
+    --custom-sand2: #EFDFCB;
+    --custom-sand3: #CDA863;
+    --custom-lila: #6867AA;   
+    --custom-lila2: #BE5491;
+    --custom-orange: #D84D33;
+    --custom-orange2: #F3BB44;
+    --custom-salmon: #D2747B;
+    --custom-greenblue: #347773;
+    --custom-green: #80C2A4;
+    --custom-light-blue: #51ACCC;
+    --custom-blue: #4553CE;
+}
+
+/* Optionally define classes that use these colors 
+.text-primary {
+    color: var(--primary-color);
+}
+
+.bg-primary {
+    background-color: var(--primary-color);
+}
+
+<div style="color: var(--primary-color);">
+    This text will be in the primary color.
+</div>
+
+<
+p class="text-primary">This text will be in the primary color.</p>
+<div class="bg-primary p-3">This div has a primary background color.</div>
+*/

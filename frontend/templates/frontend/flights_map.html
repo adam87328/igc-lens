@@ -49,6 +49,9 @@ body {
     const iconUrlClosedFaiTriangle = "{%static 'icons/closed_fai_triangle.svg'%}";
     // Marker data
     const markerList = {{ marker_list|safe }};
+    // map bounding box
+    const cornerNE = {{corner_NE|safe}};
+    const cornerSW = {{corner_SW|safe}};
 </script>
 <script src="{% static 'map_markers.js' %}"></script>
 {% endblock %}

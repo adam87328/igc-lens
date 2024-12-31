@@ -98,8 +98,7 @@ class FlightListView(ListView):
             if filter == 'scoring_name':
                 qs = qs.filter(xcscore__scoringName=value)
 
-            #qs = qs.filter(xcscore__xc_speed_airtime__gt=15)
-
+        # todo: order-by via table headings
         return qs.order_by('id')
 
     def get(self, request, *args, **kwargs):
@@ -117,9 +116,24 @@ class FlightListView(ListView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        qs = self.get_queryset()
+
         # todo: get FlightFilter for current user
         context['filter_all'] = list(FlightFilter.objects.get().all)
         context['filter_active'] = list(FlightFilter.objects.get().active)
+        
+        # map bounding box
+        if qs:
+            lat = qs.values_list('takeoff__lat', flat=True)
+            lon = qs.values_list('takeoff__lon', flat=True)
+            context["corner_NE"] = [max(lat),max(lon)]
+            context["corner_SW"] = [min(lat),min(lon)]
+        else:
+            # ain't nothing to show
+            context["corner_NE"] = [-48.875486, -123.392519]
+            context["corner_SW"] = [-48.875486, -123.392519]
+            
+
         return context
 
 

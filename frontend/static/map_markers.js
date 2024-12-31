@@ -1,7 +1,7 @@
 // Wait for the window to load
 window.onload = function() {
     // Initial coordinates and zoom level
-    const map = L.map('map').setView([45.76397244171168, 10.80946047593702], 6);
+    const map = L.map('map').fitBounds([cornerNE,cornerSW]);
 
     // 2. Add a tile layer (OpenStreetMap, or another provider)
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {

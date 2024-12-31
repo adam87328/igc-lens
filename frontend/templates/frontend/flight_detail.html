@@ -23,6 +23,10 @@ body {
     left: 50%;
     z-index: 1039; /* https://getbootstrap.com/docs/5.3/layout/z-index/ */
 }
+.offcanvas-body {
+    --bs-offcanvas-padding-y: 0;
+    --bs-offcanvas-padding-x: 0;
+}
 </style>
 {% endblock %}
 {% block content %}
@@ -36,75 +40,14 @@ body {
 </div>
 <!-- Off-Canvas Component -->
 <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample">
-    <div class="offcanvas-header">
+  <div class="offcanvas-header">
     <h5 class="offcanvas-title" id="offcanvasExampleLabel">Flight Details</h5>
     <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
-    </div>
-    <div class="offcanvas-body">
-        <h4>Flight</h4>
-        <ul>
-        <li>Takeoff {{flight.takeoff.datetime }} UTC</li>
-        <li>Landing {{flight.landing.time }} UTC</li>
-        <li>{{ flight.airtime_str }} h</li>
-        <li>{{flight.takeoff.country.upper}} {{flight.takeoff.name}} (dist {{flight.takeoff.dist|floatformat}} m)</li>
-        <li>{{ flight.xcscore.distance }} km {{ flight.xcscore.scoringName }}</li>
-        <li>XC speed (airtime) {{ flight.xcscore.xc_speed_airtime|floatformat }} km/h</li>
-        </ul>
-        <h4>Thermals</h4>
-        <ul>
-        <li>Fraction of flight: {{flight.thermals.time_total|floatformat:2}}</li>
-        <li>Max average climb: {{flight.thermals.max_avg_climb|floatformat}} m/s</li>
-        <li>Max gain: {{flight.thermals.max_gain|floatformat}} m</li>
-        <li>Left-Mix-Right: {{flight.thermals.circ_dir_L|floatformat:2}} : {{flight.thermals.circ_dir_LR|floatformat:2}} : {{flight.thermals.circ_dir_R|floatformat:2}}</li>
-        </ul>
-        
-        <h4>Glides</h4>
-        <ul>
-        <li>Fraction of flight: {{flight.glides.time_total|floatformat:2}}</li>
-        <li>Average speed: {{flight.glides.avg_speed|floatformat:2}} km/h</li>
-        </ul>
-    </div>
+  </div>
+  <div class="offcanvas-body">
+  <!-- Off-Canvas Body -->
+  {% include "frontend/details_accordion.html" %}
 </div>
-<!--
-<div class="accordion" id="accordionPanelsStayOpenExample">
-  <div class="accordion-item">
-    <h2 class="accordion-header">
-      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
-        Accordion Item #1
-      </button>
-    </h2>
-    <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show">
-      <div class="accordion-body">
-        <strong>This is the first item's accordion body.</strong> It is shown by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
-      </div>
-    </div>
-  </div>
-  <div class="accordion-item">
-    <h2 class="accordion-header">
-      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="false" aria-controls="panelsStayOpen-collapseTwo">
-        Accordion Item #2
-      </button>
-    </h2>
-    <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse">
-      <div class="accordion-body">
-        <strong>This is the second item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
-      </div>
-    </div>
-  </div>
-  <div class="accordion-item">
-    <h2 class="accordion-header">
-      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseThree" aria-expanded="false" aria-controls="panelsStayOpen-collapseThree">
-        Accordion Item #3
-      </button>
-    </h2>
-    <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse">
-      <div class="accordion-body">
-        <strong>This is the third item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
-      </div>
-    </div>
-  </div>
-</div>
--->
 <!-- leaflet -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="

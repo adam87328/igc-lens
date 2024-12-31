@@ -1,0 +1,115 @@
+<div class="accordion accordion-flush" id="accordion">
+  <!--<div class="accordion-item">
+    <h2 class="accordion-header">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+        heading
+      </button>
+    </h2>
+    <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordion">
+      <div class="accordion-body">
+      </div>
+    </div>
+  </div>-->
+  <div class="accordion-item">
+    <h2 class="accordion-header">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
+        Takeoff and Landing
+      </button>
+    </h2>
+    <div id="flush-collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordion">
+      <div class="accordion-body">
+        <p>Airtime {{flight.airtime_str}}</p>
+        <h5>Takeoff</h5>
+        <ul>
+          <li>{{flight.takeoff.datetime }} UTC</li>
+          <li>{{flight.takeoff.country.upper}} {{flight.takeoff.name}}</li>
+          <li>{{flight.takeoff.dist|floatformat}} m from database takeoff location</li>
+        </ul>
+      <h5>Landing</h5>
+        <ul>
+          <li>Landing {{flight.landing.datetime }} UTC</li>
+          <li>TODO m from takeoff</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="accordion-item">
+    <h2 class="accordion-header">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
+        Thermals and Glides
+      </button>
+    </h2>
+    <div id="flush-collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordion">
+      <div class="accordion-body">
+        <p>Turn direction ratio: left-mix-right
+        <div class="progress-stacked">
+          <div class="progress" role="progressbar" style="width:{% widthratio flight.thermals.circ_dir_L 1 100 %}%">
+            <div class="progress-bar bg-info">{{flight.thermals.circ_dir_L|floatformat:2}}</div>
+          </div>
+          <div class="progress" role="progressbar" style="width:{% widthratio flight.thermals.circ_dir_LR 1 100 %}%">
+            <div class="progress-bar bg-warning">{{flight.thermals.circ_dir_LR|floatformat:2}}</div>
+          </div>
+          <div class="progress" role="progressbar" style="width:{% widthratio flight.thermals.circ_dir_R 1 100 %}%">
+            <div class="progress-bar">{{flight.thermals.circ_dir_R|floatformat:2}}</div>
+          </div>
+        </div>
+        </p>
+        <p>Thermal to glide ratio
+        <div class="progress-stacked">
+          <div class="progress" role="progressbar" style="width:{% widthratio flight.thermals.time_total 1 100 %}%">
+            <div class="progress-bar bg-info">{{flight.thermals.time_total|floatformat:2}}</div>
+          </div>
+          <div class="progress" role="progressbar" style="width:{% widthratio flight.glides.time_total 1 100 %}%">
+            <div class="progress-bar bg-warning">{{flight.glides.time_total|floatformat:2}}</div>
+          </div>
+        </div>
+        </p>
+        <p>
+          <li>Maximum average climb {{flight.thermals.max_avg_climb|floatformat}} m/s</li>
+          <li>Maximum gain {{flight.thermals.max_gain|floatformat}} m</li>
+          <li>Average speed of glide sections: {{flight.glides.avg_speed|floatformat:2}} km/h</li>
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="accordion-item">
+    <h2 class="accordion-header">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseFour" aria-expanded="false" aria-controls="flush-collapseFour">
+        XC Score
+      </button>
+    </h2>
+    <div id="flush-collapseFour" class="accordion-collapse collapse" data-bs-parent="#accordion">
+      <div class="accordion-body">
+        <h5>{{flight.xcscore.distance}} km {{ flight.xcscore.scoringName }}</h5>
+        <ul>
+          <li>Multiplier {{flight.xcscore.multiplier}} x</li>
+          <li>Closing Distance (Penalty) {{flight.xcscore.closingDistance|default:0}} km</li>
+          <li>{{flight.xcscore.score}} points</li>
+        </ul>
+        <h5>Legs</h5>
+        <table class="table table-borderless"><tbody>
+        {%for leg in flight.xcscore.legs%}  
+        <tr><td>{{leg.name}}</td><td>{{leg.distance}} km</td><td>todo km/h</td></tr>
+        {%endfor%}
+        </tbody></table>
+        <h5>Speed</h5>
+        <ul>
+          <li>{{flight.xcscore.xc_speed_airtime|floatformat}} km/h airtime total </li>
+          <li>todo km/h route duration</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="accordion-item">
+    <h2 class="accordion-header">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseFive" aria-expanded="false" aria-controls="flush-collapseFive">
+        Hardware
+      </button>
+    </h2>
+    <div id="flush-collapseFive" class="accordion-collapse collapse" data-bs-parent="#accordion">
+      <div class="accordion-body">
+        <li>Glider {{ flight.glider|default:"None set"}}</li>
+      </div>
+    </div>
+  </div>
+</div>

@@ -116,24 +116,10 @@ class FlightListView(ListView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        qs = self.get_queryset()
-
         # todo: get FlightFilter for current user
-        context['filter_all'] = list(FlightFilter.objects.get().all)
-        context['filter_active'] = list(FlightFilter.objects.get().active)
-        
-        # map bounding box
-        if qs:
-            lat = qs.values_list('takeoff__lat', flat=True)
-            lon = qs.values_list('takeoff__lon', flat=True)
-            context["corner_NE"] = [max(lat),max(lon)]
-            context["corner_SW"] = [min(lat),min(lon)]
-        else:
-            # ain't nothing to show
-            context["corner_NE"] = [-48.875486, -123.392519]
-            context["corner_SW"] = [-48.875486, -123.392519]
-            
-
+        filter = FlightFilter.objects.get()
+        context['filter_all'] = list(filter.all)
+        context['filter_active'] = list(filter.active)    
         return context
 
 
@@ -149,6 +135,18 @@ class FlightMapView(FlightListView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["marker_list"] = \
-            [f.takeoff_marker() for f in super().get_queryset()]
+        qs = self.get_queryset()
+        
+        context["marker_list"] = [f.takeoff_marker() for f in qs]
+        # map bounding box
+        if qs:
+            lat = qs.values_list('takeoff__lat', flat=True)
+            lon = qs.values_list('takeoff__lon', flat=True)
+            context["corner_NE"] = [max(lat),max(lon)]
+            context["corner_SW"] = [min(lat),min(lon)]
+        else:
+            # ain't nothing to show
+            context["corner_NE"] = [-48.875486, -123.392519]
+            context["corner_SW"] = [-48.875486, -123.392519]
+
         return context

@@ -22,12 +22,19 @@ body {
     flex-grow: 1; /* Make the container take up remaining space */
     position: relative; /* Ensures that the button is positioned relative to this container */
 }
-.floating-div {
+.filter-div {
     position: absolute;
     top: 15px;
     right: 50%;
     transform: translateX(+50%); /* simulate anchor at center */
     z-index: 1039; /* https://getbootstrap.com/docs/5.3/layout/z-index/ */
+}
+.center-overlay-div {
+    position: absolute;
+    top: 50%;
+    right: 50%;
+    transform: translateX(+50%); /* simulate anchor at center */
+    z-index: 1039;
 }
 </style>
 {% endblock %}
@@ -39,10 +46,15 @@ body {
     <div id="map" style="width: 100%; height: 100%;"></div>
     <!-- active filters overlay -->
     {%if filter_active%}
-    <div class="floating-div">
+    <div class="filter-div">
         {% for item in filter_active %}
         <span class="badge text-bg-warning">{{item}}</span>
         {% endfor %}
+    </div>
+    {%endif%}
+    {%if not flights%}
+    <div class="center-overlay-div">
+        here be dragons
     </div>
     {%endif%}
 </div>

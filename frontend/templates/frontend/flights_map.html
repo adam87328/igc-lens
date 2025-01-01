@@ -71,12 +71,6 @@ body {
 <!-- leaflet map -->
 {% load static %}
 <script>
-    const iconUrlLocalFlight = "{%static 'icons/local_flight.svg'%}";
-    const iconUrlFreeFlight = "{%static 'icons/free_flight.svg'%}";
-    const iconUrlFlatTriangle = "{%static 'icons/flat_triangle.svg'%}";
-    const iconUrlFaiTriangle = "{%static 'icons/fai_triangle.svg'%}";
-    const iconUrlClosedFlatTriangle = "{%static 'icons/closed_flat_triangle.svg'%}";
-    const iconUrlClosedFaiTriangle = "{%static 'icons/closed_fai_triangle.svg'%}";
     // Marker data
     const markerList = {{ marker_list|safe }};
     // map bounding box

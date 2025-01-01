@@ -3,6 +3,7 @@ from django.urls import reverse
 # https://docs.djangoproject.com/en/5.1/topics/db/aggregation/
 from django.db.models import Sum, F, ExpressionWrapper, FloatField
 from django.db.models.functions import ExtractYear
+from django.templatetags.static import static
 
 from datetime import timedelta
 from .util import *
@@ -111,7 +112,7 @@ class Flight(JSONModel):
     # flight as timeseries - unfortunately there is no field for lists
     timeseries = models.JSONField()
 
-    def _get_icon_for_marker(self, marker_type):
+    def _get_icon_for_scoring_name(self, marker_type):
         icon_urls = {
             'Local Flight': 'icons/local_flight.svg',
             'Free Flight': 'icons/free_flight.svg',
@@ -129,7 +130,7 @@ class Flight(JSONModel):
         else:
             key = self.xcscore.scoringName
             
-        return self._get_icon_for_marker(key)
+        return self._get_icon_for_scoring_name(key)
 
     def takeoff_marker(self):
         if not self.takeoff:
@@ -148,7 +149,7 @@ class Flight(JSONModel):
             "type": "Feature",
             "properties": {
                 "popupContent": popup,
-                "markerType" : marker_type,
+                "iconUrl" : static(self.icon_url()),
             },
             "geometry": {
                 "type": "Point",

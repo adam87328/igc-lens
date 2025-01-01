@@ -143,7 +143,7 @@ class FlightMapView(FlightListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         qs = self.get_queryset()
-        
+        # icon at takeoff location
         context["marker_list"] = [f.takeoff_marker() for f in qs]
         # map bounding box
         if qs:

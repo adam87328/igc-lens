@@ -19,13 +19,13 @@
     <div id="flush-collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordion">
       <div class="accordion-body">
         <p>Airtime {{flight.airtime_str}}</p>
-        <h5>Takeoff</h5>
+        <h6>Takeoff</h6>
         <ul>
           <li>{{flight.takeoff.datetime }} UTC</li>
           <li>{{flight.takeoff.country.upper}} {{flight.takeoff.name}}</li>
           <li>{{flight.takeoff.dist|floatformat}} m from database takeoff location</li>
         </ul>
-      <h5>Landing</h5>
+      <h6>Landing</h6>
         <ul>
           <li>Landing {{flight.landing.datetime }} UTC</li>
           <li>TODO m from takeoff</li>
@@ -80,19 +80,19 @@
     </h2>
     <div id="flush-collapseFour" class="accordion-collapse collapse" data-bs-parent="#accordion">
       <div class="accordion-body">
-        <h5>{{flight.xcscore.distance}} km {{ flight.xcscore.scoringName }}</h5>
+        <h6>{{flight.xcscore.distance}} km {{ flight.xcscore.scoringName }}</h6>
         <ul>
           <li>Multiplier {{flight.xcscore.multiplier}} x</li>
           <li>Closing Distance (Penalty) {{flight.xcscore.closingDistance|default:0}} km</li>
           <li>{{flight.xcscore.score}} points</li>
         </ul>
-        <h5>Legs</h5>
+        <h6>Legs</h6>
         <table class="table table-borderless"><tbody>
         {%for leg in flight.xcscore.legs%}  
-        <tr><td>{{leg.name}}</td><td>{{leg.distance}} km</td><td>todo km/h</td></tr>
+        <tr><td>{{leg.name}}</td><td>{{leg.distance}} km</td><td>hh:mm</td><td>todo km/h</td></tr>
         {%endfor%}
         </tbody></table>
-        <h5>Speed</h5>
+        <h6>Speed</h6>
         <ul>
           <li>{{flight.xcscore.xc_speed_airtime|floatformat}} km/h airtime total </li>
           <li>todo km/h route duration</li>
@@ -108,7 +108,19 @@
     </h2>
     <div id="flush-collapseFive" class="accordion-collapse collapse" data-bs-parent="#accordion">
       <div class="accordion-body">
-        <li>Glider {{ flight.glider|default:"None set"}}</li>
+        <h6>Glider type</h6>
+        <ul>
+          <li>{{ flight.glider|default:"None set"}}</li>
+        </ul>
+        <h6>Flight recorder</h6>
+        <ul>
+          <li>Type: {{flight.recorder.type}}</li>
+          <li>Manufacturer code: {{flight.recorder.code}}</li>
+          <li>GNSS sensor: {{flight.recorder.gnss}}</li>
+          <li>Pressure sensor: {{flight.recorder.press}}</li>
+          <li>Firmware version: {{flight.recorder.firmware_v}}</li>
+          <li>Hardware version: {{flight.recorder.hardware_v}}</li>
+        </ul>
       </div>
     </div>
   </div>

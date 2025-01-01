@@ -128,6 +128,26 @@ class FlightTableView(FlightListView):
     template_name = "frontend/flights_table.html"
     paginate_by = 20
 
+    def get_icon_for_marker_type(self, marker_type):
+        icon_urls = {
+            'Local Flight': 'icons/local_flight.svg',
+            'Free Flight': 'icons/free_flight.svg',
+            'Free Triangle': 'icons/flat_triangle.svg',
+            'FAI Triangle': 'icons/fai_triangle.svg',
+            'Closed Free Triangle': 'icons/closed_flat_triangle.svg',
+            'Closed FAI Triangle': 'icons/closed_fai_triangle.svg'
+        }
+        return icon_urls.get(marker_type, None)  # None if no matching marker_type
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        rows = context['object_list']  # Your rows data
+
+        # Loop through your rows and assign icons based on marker type
+        for row in rows:
+            row.icon_url = self.get_icon_for_marker_type(row.xcscore.scoringName)
+
+        return context
 
 class FlightMapView(FlightListView):
     """A map where each flight is represented as marker"""

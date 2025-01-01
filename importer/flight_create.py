@@ -4,6 +4,8 @@ from django.db import IntegrityError
 from .models import *
 from . import util
 from .microservice import MicroserviceInterface
+from timezonefinder import TimezoneFinder
+import pytz
 
 class CreateFlight():
 
@@ -81,6 +83,10 @@ class CreateFlight():
         flight.glides.geojson =                 json_data["glides"]
         flight.thermals.geojson =               json_data["thermals"]
         flight.timeseries =                     json_data["timeseries"]
+        # timezone
+        flight.timezone = TimezoneFinder().timezone_at(
+            lat=flight.takeoff.lat,
+            lng=flight.takeoff.lon)
 
     @staticmethod
     def assign_xcscore(flight,igc_StringIO):

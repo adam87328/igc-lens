@@ -79,15 +79,6 @@ class FlightManager(models.Manager):
         q = Flight.objects.filter(takeoff__datetime__year=year)
         return q.count()
     
-#    def get_only_xc(self):
-#        """Derive a boolean whether the flight is a local flight, or XC"""
-#        # todo: once we have xc distance from igc-xc-score, use instad
-#        # of points
-#        q = Flight.objects.annotate(
-#            xc_km_per_hour=ExpressionWrapper(
-#                F('xcscore__distance') / ( F('airtime') / 3600),
-#                output_field=FloatField()))
-
 
 # Create your models here.
 class Flight(JSONModel):
@@ -100,6 +91,9 @@ class Flight(JSONModel):
 
     # date from igc file header
     date = models.DateField()
+
+    # timezone for takeoff lat/lon
+    timezone = models.CharField(max_length=64)
 
     # flight import datetime
     import_datetime = models.DateTimeField(auto_now_add=True)
@@ -150,8 +144,8 @@ class Flight(JSONModel):
 
     @property
     def airtime_str(self):
-        """format self.airtime into hh:mm:ss"""
-        return str(timedelta(seconds=self.airtime))
+        """format self.airtime into hh:mm"""
+        return str(timedelta(seconds=self.airtime))[:-3] # strip seconds
         
     @property
     def file_hash_short(self):
@@ -277,7 +271,7 @@ class Takeoff(JSONModel):
     # "time": {
     #   "value": "2024-08-05 09:33:15",
     #   "unit": "UTC"
-    # }
+    # is localized to UTC on import
     datetime = models.DateTimeField()
     
     # named takeoff location from takeoff database
@@ -315,6 +309,14 @@ class Takeoff(JSONModel):
     # "country": "Switzerland"
     country = models.CharField(max_length=64)
 
+    @property
+    def datetime_local(self):
+        local_zone = pytz.timezone(self.parent.timezone)
+        local_time = self.datetime.astimezone(local_zone)
+        utc_delta = int(local_time.utcoffset().total_seconds()/3600)
+        return {'time': local_time.ctime(), 
+                'tzinfo': f"UTC{utc_delta:+d}"}
+ 
     def __str__(self):
         s = f"{str(self.datetime.time())} {self.country_code.upper()} "
         s += f" {self.name}" if self.name else ""
@@ -348,6 +350,14 @@ class Landing(JSONModel):
     #   "unit": "m"
     # }
     alt_gnss = models.FloatField()
+
+    @property
+    def datetime_local(self):
+        local_zone = pytz.timezone(self.parent.timezone)
+        local_time = self.datetime.astimezone(local_zone)
+        utc_delta = int(local_time.utcoffset().total_seconds()/3600)
+        return {'time': local_time.ctime(), 
+                'tzinfo': f"UTC{utc_delta:+d}"}
 
     def __str__(self):
         s = f"{str(self.datetime.time())}"

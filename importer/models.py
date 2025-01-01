@@ -111,6 +111,26 @@ class Flight(JSONModel):
     # flight as timeseries - unfortunately there is no field for lists
     timeseries = models.JSONField()
 
+    def _get_icon_for_marker(self, marker_type):
+        icon_urls = {
+            'Local Flight': 'icons/local_flight.svg',
+            'Free Flight': 'icons/free_flight.svg',
+            'Free Triangle': 'icons/flat_triangle.svg',
+            'FAI Triangle': 'icons/fai_triangle.svg',
+            'Closed Free Triangle': 'icons/closed_flat_triangle.svg',
+            'Closed FAI Triangle': 'icons/closed_fai_triangle.svg'
+        }
+        return icon_urls.get(marker_type, None)
+
+    def icon_url(self):
+        """Return icon path"""
+        if self.xcscore.is_local():
+            key = "Local Flight"
+        else:
+            key = self.xcscore.scoringName
+            
+        return self._get_icon_for_marker(key)
+
     def takeoff_marker(self):
         if not self.takeoff:
             return {}

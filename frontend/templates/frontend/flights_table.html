@@ -6,58 +6,57 @@
 {% endblock %}
 
 {% block content %}
-<div class="container-lg mt-5">
-<div class="col-xl-10 offset-xl-1">
+<!-- filter div -->
+<div class="container-lg p-3" style="text-align: center;">
   {% for item in filter_active %}
   <span class="badge text-bg-warning">{{item}}</span>
   {% endfor %}
 </div>
-<div class="col-xl-10 offset-xl-1">
-{% if flights %}
-<table class="table table-hover table-sm">
-  <thead>
-    <tr>
-      <th><!--link icon--></th>
-      <th>Takeoff</th>
-      <th>Airtime</th>
-      <th>Takeoff</th>
-      <th>XC km</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for flight in flights %}
-    <tr>
-        <td><a class="icon-link" href="{% url 'frontend:flight_detail' flight.id %}"><i class="bi-box-seam"></i></a></td>
-        {% with flight.takeoff.datetime_local as lt %}
-        <td>{{ lt.time }} <small style="font-size: 60%" class="text-muted">{{ lt.tzinfo }}</small></td>
-        {% endwith %}
-        <td>{{ flight.airtime_str }}</td>
-        <td>{{ flight.takeoff.country_code|upper }}{%if flight.takeoff.name %} {{ flight.takeoff.name }} {% else %} N/A ({{ flight.takeoff.state }}){% endif %}</td>
-        <td><img src="{%static flight.icon_url%}"> {{ flight.xcscore.distance|floatformat:1 }}</td>
-        </a>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
-{% else %}
-    <p><i class="bi-cloud-hail"></i> No flights in query.</p>
-{% endif %}
-<!-- Pagination controls -->
-<nav aria-label="Page navigation example">
-  <ul class="pagination justify-content-center">
-      {% for k in page_obj.paginator.page_range %}
-          {% if page_obj.number == k %}
-          <li class="page-item active">
-          {% else %}
-          <li class="page-item">
-          {% endif %}
-              <a class="page-link" href={% querystring page=k %}>{{ k }}</a> 
-          </li>
+<!-- table div -->
+<div class="container-lg">
+  {% if flights %}
+  <table class="table table-hover table-sm">
+    <thead>
+      <tr>
+        <th><!--link icon--></th>
+        <th>Takeoff</th>
+        <th>Airtime</th>
+        <th>Takeoff</th>
+        <th>XC km</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for flight in flights %}
+      <tr>
+          <td><a class="icon-link" href="{% url 'frontend:flight_detail' flight.id %}"><i class="bi-box-seam"></i></a></td>
+          {% with flight.takeoff.datetime_local as lt %}
+          <td>{{ lt.time }} <small style="font-size: 60%" class="text-muted">{{ lt.tzinfo }}</small></td>
+          {% endwith %}
+          <td>{{ flight.airtime_str }}</td>
+          <td>{{ flight.takeoff.country_code|upper }}{%if flight.takeoff.name %} {{ flight.takeoff.name }} {% else %} N/A ({{ flight.takeoff.state }}){% endif %}</td>
+          <td><img src="{%static flight.icon_url%}" alt="{{ flight.xcscore.scoringName }}"> {{ flight.xcscore.distance|floatformat:1 }}</td>
+          </a>
+      </tr>
       {% endfor %}
-  </ul>
-</nav>
-<!-- /Pagination controls -->
+    </tbody>
+  </table>
+  <!-- Pagination controls -->
+  <nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center">
+        {% for k in page_obj.paginator.page_range %}
+            {% if page_obj.number == k %}
+            <li class="page-item active">
+            {% else %}
+            <li class="page-item">
+            {% endif %}
+                <a class="page-link" href={% querystring page=k %}>{{ k }}</a> 
+            </li>
+        {% endfor %}
+    </ul>
+  </nav>
+{% else %}
+  <p><i class="bi-cloud-hail"></i> No flights in query.</p>
+{% endif %}
+</div>
 
-</div>
-</div>
 {% endblock %}

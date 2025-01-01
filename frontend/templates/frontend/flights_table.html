@@ -34,7 +34,10 @@
           {% endwith %}
           <td>{{ flight.airtime_str }}</td>
           <td>{{ flight.takeoff.country_code|upper }}{%if flight.takeoff.name %} {{ flight.takeoff.name }} {% else %} N/A ({{ flight.takeoff.state }}){% endif %}</td>
-          <td><img src="{%static flight.icon_url%}" alt="{{ flight.xcscore.scoringName }}"> {{ flight.xcscore.distance|floatformat:1 }}</td>
+          <td style="display: flex; justify-content: left;">
+            <img src="{%static flight.icon_url%}" alt="{{ flight.xcscore.scoringName }}">
+            <span style="margin-left: 5px;"></span>{{ flight.xcscore.distance|floatformat:1 }}</span>
+          </td>
           </a>
       </tr>
       {% endfor %}

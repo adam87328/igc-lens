@@ -145,6 +145,8 @@ class FlightTableView(FlightListView):
 
         # Loop through your rows and assign icons based on marker type
         for row in rows:
+            if row.xcscore.is_local():
+                row.xcscore.scoringName = "Local Flight"
             row.icon_url = self.get_icon_for_marker_type(row.xcscore.scoringName)
 
         return context

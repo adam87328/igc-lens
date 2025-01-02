@@ -21,8 +21,8 @@
   <body>
     <style>
       .bi {
-        width: 1em;
-        height: 1em;
+        width: 1.25em;
+        height: 1.25em;
         vertical-align: center;
         fill: currentcolor;
         }
@@ -49,13 +49,13 @@
               <a class="nav-link" aria-current="page" href="{% url 'importer:upload' %}">Upload</a>
             </li>
             <!-- tmp buttons to switch dark/light mode -->
-            <li>
-              <button type="button" class="dropdown-item d-flex" data-bs-theme-value="light" aria-pressed="false">
+            <li class="nav-item">
+              <button type="button" class="nav-link" data-bs-theme-value="light" aria-pressed="false">
                 <svg class="bi me-2 opacity-50"><use href="#sun-fill"></use></svg>
               </button>
             </li>
-            <li>
-              <button type="button" class="dropdown-item d-flex active" data-bs-theme-value="dark" aria-pressed="true">
+            <li class="nav-item">
+              <button type="button" class="nav-link" data-bs-theme-value="dark" aria-pressed="true">
                 <svg class="bi me-2 opacity-50"><use href="#moon-stars-fill"></use></svg>
               </button>
             </li>

@@ -2,13 +2,13 @@
 
 {% block content %}
 <div class="container-lg mt-5">
-    <div class="col-xl-10 offset-xl-1">
+  <div class="col-xl-10 offset-xl-1">
 
 <h1>Total</h1>
 <div class="row"><div class="col-6">
 <p class="lead">
-    You left the ground {{total.flights}} times for a total of 
-    {{total.airtime|floatformat}} hours. Yay!
+  You left the ground {{total.flights}} times for a total of 
+  {{total.airtime|floatformat}} hours. Yay!
 </p>
 </div></div>
 
@@ -16,36 +16,75 @@
 <h2>Airtime</h2>
 {% for year, vals in per_year.items %}
 <div class="row">
-    <div class="col-1">
-        {{year}}
+  <div class="col-1">
+    {{year}}
+  </div>
+  <div class="col-11">
+    <div class="progress" 
+       role="progressbar">
+      <div class="progress-bar" style="width: {{ vals.airtime.rel }}%"> 
+        {{ vals.airtime.abs|floatformat }} h 
+      </div>
     </div>
-    <div class="col-11">
-        <div class="progress" 
-             role="progressbar">
-            <div class="progress-bar" style="width: {{ vals.airtime.rel }}%"> 
-                {{ vals.airtime.abs|floatformat }} h 
-            </div>
-        </div>
-    </div>
+  </div>
 </div>
 {% endfor %}
 
 <h2>Number of Flights</h2>
 {% for year, vals in per_year.items %}
 <div class="row">
-    <div class="col-1">
-        {{year}}
+  <div class="col-1">
+    {{year}}
+  </div>
+  <div class="col-11">
+    <div class="progress" 
+        role="progressbar">
+      <div class="progress-bar" style="width: {{ vals.flights.rel }}%">
+          {{ vals.flights.abs|floatformat }}
+      </div>
     </div>
-    <div class="col-11">
-        <div class="progress" 
-             role="progressbar">
-            <div class="progress-bar" style="width: {{ vals.flights.rel }}%">
-                {{ vals.flights.abs|floatformat }}
-            </div>
-        </div>
-    </div>
+  </div>
 </div>
 {% endfor %}
+
+<h2>XC Kilometers</h2>
+{% for year, vals in per_year.items %}
+<div class="row">
+  <div class="col-1">
+    {{year}}
+  </div>
+  <div class="col-11">
+    <div class="progress" 
+      role="progressbar">
+      <div class="progress-bar" style="width: {{ vals.xc_km.rel }}%">
+        {{ vals.xc_km.abs|floatformat }}
+      </div>
+    </div>
+  </div>
+</div>
+{% endfor %}
+
+<h2>per takeoff</h2>
+
+<div class="row">
+  <table class="table table-hover table-sm w-100" style="max-width: 768px; margin: 0 auto;">
+    <thead>
+      <th>Takeoff</th>
+      <th>Airtime</th>
+      <th>Flights</th>
+      <th>XC km</th>
+    </thead>
+    {% for takeoff, vals in per_takeoff.items %}
+    <tr>
+      <td>{{takeoff}}</td>
+      <td>{{vals.airtime|floatformat}}</td>
+      <td>{{vals.flights}}</td>
+      <td>{{vals.xc_km|floatformat}}</td>
+    </tr>
+    {% endfor %}
+  </table>
+</div>
+
 
 </div></div>
 {% endblock %}

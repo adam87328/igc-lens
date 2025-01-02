@@ -72,7 +72,7 @@ class FlightQuerySet(models.QuerySet):
     
     def get_unique_takeoffs(self):
         """Return xc kilometers"""
-        qs = self.values_list('takeoff__name').distinct()
+        qs = self.values_list('takeoff__name', flat=True).distinct()
         return list(qs)
 
     def filt_year(self,year):
@@ -137,13 +137,11 @@ class Flight(JSONModel):
             key = "Local Flight"
         else:
             key = self.xcscore.scoringName
-            
         return self._get_icon_for_scoring_name(key)
 
     def takeoff_marker(self):
         if not self.takeoff:
             return {}
-        
         tl = self.takeoff.datetime_local
         popup = f"\
             <li>{tl["time"]} UTC{tl["utc_delta"]}</li>\

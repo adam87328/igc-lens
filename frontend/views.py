@@ -59,16 +59,16 @@ class StatisticsView(TemplateView):
         per_takeoff = {}
         for y in fm.all().get_unique_takeoffs():
             qy = fm.all().filt_takeoff(y)
-            per_takeoff[y] = {"airtime": {"abs": 0, "rel": 0},
-                           "flights": {"abs": 0, "rel": 0},
-                           "xc_km": {"abs": 0, "rel": 0}}
-            per_takeoff[y]["airtime"]["abs"] = qy.get_airtime()
-            per_takeoff[y]["flights"]["abs"] = qy.count()
-            per_takeoff[y]["xc_km"]["abs"] = qy.get_xckm()
+            per_takeoff[y] = {"airtime": 0,
+                           "flights": 0,
+                           "xc_km": 0}
+            per_takeoff[y]["airtime"] = qy.get_airtime()
+            per_takeoff[y]["flights"] = qy.count()
+            per_takeoff[y]["xc_km"] = qy.get_xckm()
 
 
         context["per_year"] = per_year
-        context["per_takeoff"] = per_year
+        context["per_takeoff"] = per_takeoff
         context["total"] = total
         return context
     

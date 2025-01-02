@@ -34,24 +34,41 @@ class StatisticsView(TemplateView):
         total = {}
         total["flights"] = fm.all().count()
         total["airtime"] = fm.all().get_airtime()
-
+        total["xc_km"] = fm.all().get_xckm()
+        total["takeoffs"] = fm.all().get_unique_takeoffs() # list, not number
         
         # get values per year
         per_year = {}
         for y in fm.all().get_unique_years():
+            qy = fm.all().filt_year(y)
             per_year[y] = {"airtime": {"abs": 0, "rel": 0},
-                           "flights": {"abs": 0, "rel": 0}}
-            per_year[y]["airtime"]["abs"] = fm.all().get_year(y).get_airtime()
-            per_year[y]["flights"]["abs"] = fm.all().get_year(y).count()
+                           "flights": {"abs": 0, "rel": 0},
+                           "xc_km": {"abs": 0, "rel": 0}}
+            per_year[y]["airtime"]["abs"] = qy.get_airtime()
+            per_year[y]["flights"]["abs"] = qy.count()
+            per_year[y]["xc_km"]["abs"] = qy.get_xckm()
 
         # compute values relative to best year
-        for field in ["airtime", "flights"]:
+        for field in ["airtime", "flights","xc_km"]:
             m = max(item[field]["abs"] for item in per_year.values())
             for item in per_year.values():
                 # in percent for use in CSS
                 item[field]["rel"] = 100 * item[field]["abs"] / m
 
+        # get values per year
+        per_takeoff = {}
+        for y in fm.all().get_unique_takeoffs():
+            qy = fm.all().filt_takeoff(y)
+            per_takeoff[y] = {"airtime": {"abs": 0, "rel": 0},
+                           "flights": {"abs": 0, "rel": 0},
+                           "xc_km": {"abs": 0, "rel": 0}}
+            per_takeoff[y]["airtime"]["abs"] = qy.get_airtime()
+            per_takeoff[y]["flights"]["abs"] = qy.count()
+            per_takeoff[y]["xc_km"]["abs"] = qy.get_xckm()
+
+
         context["per_year"] = per_year
+        context["per_takeoff"] = per_year
         context["total"] = total
         return context
     

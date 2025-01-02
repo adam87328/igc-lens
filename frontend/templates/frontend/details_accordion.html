@@ -21,13 +21,17 @@
         <p>Airtime {{flight.airtime_str}}</p>
         <h6>Takeoff</h6>
         <ul>
-          <li>{{flight.takeoff.datetime }} UTC</li>
+          {% with flight.takeoff.datetime_local as lt %}
+          <li>{{ lt.time }} <small style="font-size: 60%" class="text-muted">UTC{{ lt.utc_delta }}</small></li>
+          {% endwith %}
           <li>{{flight.takeoff.country.upper}} {{flight.takeoff.name}}</li>
           <li>{{flight.takeoff.dist|floatformat}} m from database takeoff location</li>
         </ul>
       <h6>Landing</h6>
         <ul>
-          <li>Landing {{flight.landing.datetime }} UTC</li>
+          {% with flight.landing.datetime_local as lt %}
+          <li>{{ lt.time }} <small style="font-size: 60%" class="text-muted">UTC{{ lt.utc_delta }}</small></li>
+          {% endwith %}
           <li>TODO m from takeoff</li>
         </ul>
       </div>

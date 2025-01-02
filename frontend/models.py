@@ -45,7 +45,7 @@ class FlightFilter(models.Model):
 
     def add_takeoffs(self):
         """Add unique list of takeoffs"""
-        for x in Flight.objects.values_list('takeoff__name', flat=True).distinct():
+        for x in Flight.objects.all().get_unique_takeoffs():
             self.all[x] = 'takeoff'
 
     def set_filter(self,name):

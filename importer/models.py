@@ -63,11 +63,25 @@ class FlightQuerySet(models.QuerySet):
     def get_airtime(self):
         """Return airtime in hours"""
         t_sec = self.aggregate(Sum("airtime")).get('airtime__sum', 0)
-        return t_sec / 3600
+        return t_sec / 3600 if t_sec else 0
     
-    def get_year(self,year):
+    def get_xckm(self):
+        """Return xc kilometers"""
+        km = self.aggregate(Sum("xcscore__distance")).get('xcscore__distance__sum', 0)
+        return km
+    
+    def get_unique_takeoffs(self):
+        """Return xc kilometers"""
+        qs = self.values_list('takeoff__name').distinct()
+        return list(qs)
+
+    def filt_year(self,year):
         """Return flights in year"""
         return self.filter(takeoff__datetime__year=year)
+    
+    def filt_takeoff(self,name):
+        """Return flights from takeoff"""
+        return self.filter(takeoff__name=name)
 
 
 class FlightManager(models.Manager):
@@ -129,12 +143,14 @@ class Flight(JSONModel):
     def takeoff_marker(self):
         if not self.takeoff:
             return {}
-        popup = f"<ul>\
-            <li>{self.takeoff.datetime.date()}</li>\
-            <li>{self.airtime_str} h</li>\
+        
+        tl = self.takeoff.datetime_local
+        popup = f"\
+            <li>{tl["time"]} UTC{tl["utc_delta"]}</li>\
+            <li>Airtime {self.airtime_str} h</li>\
             <li>{self.xcscore.scoringName} {self.xcscore.score} p</li>\
             <li>{self.link_detail('Flight detail')}</li>\
-            </ul>"
+            "
         if self.xcscore.is_local():
             marker_type = "Local Flight"
         else:
@@ -326,11 +342,7 @@ class Takeoff(JSONModel):
 
     @property
     def datetime_local(self):
-        local_zone = pytz.timezone(self.parent.timezone)
-        local_time = self.datetime.astimezone(local_zone)
-        utc_delta = int(local_time.utcoffset().total_seconds()/3600)
-        return {'time': local_time.ctime(), 
-                'tzinfo': f"{utc_delta:+d}"} # eg UTC+2
+        return to_localtime(self.datetime,self.parent.timezone)
  
     def __str__(self):
         s = f"{str(self.datetime.time())} {self.country_code.upper()} "
@@ -368,12 +380,8 @@ class Landing(JSONModel):
 
     @property
     def datetime_local(self):
-        local_zone = pytz.timezone(self.parent.timezone)
-        local_time = self.datetime.astimezone(local_zone)
-        utc_delta = int(local_time.utcoffset().total_seconds()/3600)
-        return {'time': local_time.ctime(), 
-                'tzinfo': f"{utc_delta:+d}"}
-
+        return to_localtime(self.datetime,self.parent.timezone)
+        
     def __str__(self):
         s = f"{str(self.datetime.time())}"
         return s

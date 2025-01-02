@@ -81,6 +81,9 @@ class FlightListView(ListView):
     def get_queryset(self):
         qs = super().get_queryset()
         for value, filter in FlightFilter.objects.get().active.items():
+            
+            if filter == 'takeoff':
+                qs = qs.filter(takeoff__name=value)
 
             if filter == 'xc_dist':
                 # extract number
@@ -92,21 +95,18 @@ class FlightListView(ListView):
                 sec = 3600*int(match.group()) # hours to sec
                 qs = qs.filter(airtime__gt=sec)
 
-            if filter == 'takeoff':
-                qs = qs.filter(takeoff__name=value)
-
             if filter == 'scoring_name':
                 qs = qs.filter(xcscore__scoringName=value)
 
         # todo: order-by via table headings
-        return qs.order_by('id')
+        return qs.order_by('date')
 
     def get(self, request, *args, **kwargs):
-        # Store the checkbox value in the session if submitted
+        # accumulate filters in FlightFilter model
         if 'flightFilter' in request.GET:
             filter_verbose_name = request.GET.get('flightFilter')
             FlightFilter.objects.get().set_filter(filter_verbose_name)
-
+        # reset FlightFilter model
         if 'reset' in request.GET:
             o = FlightFilter.objects.get()
             o.active = {}

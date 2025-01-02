@@ -336,7 +336,7 @@ class Takeoff(JSONModel):
         local_time = self.datetime.astimezone(local_zone)
         utc_delta = int(local_time.utcoffset().total_seconds()/3600)
         return {'time': local_time.ctime(), 
-                'tzinfo': f"UTC{utc_delta:+d}"}
+                'tzinfo': f"{utc_delta:+d}"} # eg UTC+2
  
     def __str__(self):
         s = f"{str(self.datetime.time())} {self.country_code.upper()} "
@@ -378,7 +378,7 @@ class Landing(JSONModel):
         local_time = self.datetime.astimezone(local_zone)
         utc_delta = int(local_time.utcoffset().total_seconds()/3600)
         return {'time': local_time.ctime(), 
-                'tzinfo': f"UTC{utc_delta:+d}"}
+                'tzinfo': f"{utc_delta:+d}"}
 
     def __str__(self):
         s = f"{str(self.datetime.time())}"

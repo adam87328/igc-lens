@@ -7,21 +7,21 @@
 
 {% block content %}
 <!-- filter div -->
-<div class="container-lg p-3" style="text-align: center;">
+<div class="container-md p-3" style="text-align: center;">
   {% for item in filter_active %}
   <span class="badge text-bg-warning">{{item}}</span>
   {% endfor %}
 </div>
 <!-- table div -->
-<div class="container-lg">
+<div class="container-md">
   {% if flights %}
-  <table class="table table-hover table-sm">
+  <table class="table table-hover table-sm w-100" style="max-width: 768px; margin: 0 auto;">
     <thead>
       <tr>
         <th><!--link icon--></th>
-        <th>Takeoff</th>
+        <th>Takeoff Local Time <small style="font-size: 60%" class="text-muted">UTC +/-</small></th>
+        <th>Takeoff Location</th>
         <th>Airtime</th>
-        <th>Takeoff</th>
         <th>XC km</th>
       </tr>
     </thead>
@@ -32,8 +32,8 @@
           {% with flight.takeoff.datetime_local as lt %}
           <td>{{ lt.time }} <small style="font-size: 60%" class="text-muted">{{ lt.tzinfo }}</small></td>
           {% endwith %}
-          <td>{{ flight.airtime_str }}</td>
           <td>{{ flight.takeoff.country_code|upper }}{%if flight.takeoff.name %} {{ flight.takeoff.name }} {% else %} N/A ({{ flight.takeoff.state }}){% endif %}</td>
+          <td>{{ flight.airtime_str }}</td>
           <td style="display: flex; justify-content: left;">
             <img src="{%static flight.icon_url%}" alt="{{ flight.xcscore.scoringName }}">
             <span style="margin-left: 5px;"></span>{{ flight.xcscore.distance|floatformat:1 }}</span>
@@ -44,19 +44,21 @@
     </tbody>
   </table>
   <!-- Pagination controls -->
-  <nav aria-label="Page navigation example">
-    <ul class="pagination justify-content-center">
-        {% for k in page_obj.paginator.page_range %}
-            {% if page_obj.number == k %}
-            <li class="page-item active">
-            {% else %}
-            <li class="page-item">
-            {% endif %}
-                <a class="page-link" href={% querystring page=k %}>{{ k }}</a> 
-            </li>
-        {% endfor %}
-    </ul>
-  </nav>
+  <div class="m-3">
+    <nav aria-label="Page navigation example">
+      <ul class="pagination justify-content-center">
+          {% for k in page_obj.paginator.page_range %}
+              {% if page_obj.number == k %}
+              <li class="page-item active">
+              {% else %}
+              <li class="page-item">
+              {% endif %}
+                  <a class="page-link" href={% querystring page=k %}>{{ k }}</a> 
+              </li>
+          {% endfor %}
+      </ul>
+    </nav>
+  </div> 
 {% else %}
   <p><i class="bi-cloud-hail"></i> No flights in query.</p>
 {% endif %}

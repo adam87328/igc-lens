@@ -70,12 +70,16 @@ body {
 </script>
 <!-- leaflet map -->
 {% load static %}
+<script src="{% static 'map_markers.js' %}"></script>
 <script>
     // Marker data
     const markerList = {{ marker_list|safe }};
     // map bounding box
     const cornerNE = {{corner_NE|safe}};
     const cornerSW = {{corner_SW|safe}};
+    // Initialize map if the map container exists
+    if (document.getElementById('map')) {
+      mapThemeInterface.initMap(markerList,cornerNE,cornerSW);
+    }
 </script>
-<script src="{% static 'map_markers.js' %}"></script>
 {% endblock %}

@@ -32,10 +32,9 @@ INTERNAL_IPS = [
 ]
 
 # Application definition
-
-INSTALLED_APPS = [
+# 'debug_toolbar',
+INSTALLED_APPS =[
     'djgeojson',
-    'debug_toolbar',
     'django_extensions',
     'frontend.apps.FrontendConfig',
     'importer.apps.ImportIgcConfig',
@@ -47,8 +46,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 ]
 
+# "debug_toolbar.middleware.DebugToolbarMiddleware",
 MIDDLEWARE = [
-    "debug_toolbar.middleware.DebugToolbarMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',

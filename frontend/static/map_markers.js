@@ -1,36 +1,53 @@
-// Wait for the window to load
-window.onload = function() {
-    // Initial coordinates and zoom level
-    const map = L.map('map').fitBounds([cornerNE,cornerSW]);
-
-    // 2. Add a tile layer (OpenStreetMap, or another provider)
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(map);
-
-    // 4. Add an event listener for the 'load' event
-    map.on('load', function() {
-
-        // 5. Add markers to the map after the map has fully loaded
+// Create a global interface to update map theme
+const mapThemeInterface = (() => {
+    let map;
+  
+    // Light and dark map tile layers
+    const lightTiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors'
+    });
+    const darkTiles = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', {
+      attribution: '&copy; CartoDB'
+    });
+  
+    // Initialize the map
+    const initMap = (markerList,cornerNE,cornerSW) => { // markerList=markerList, cornerNE=cornerNE, cornerSW=cornerSW
+        map = map = L.map('map').fitBounds([cornerNE,cornerSW]);
+        // set tile layer according to current <html data-bs-theme="dark">
+        updateMapTheme(document.documentElement.getAttribute('data-bs-theme'));
+        // add markers
         markerList.forEach(markerData => {
             const coordinates = markerData.geometry.coordinates;
             const popupContent = markerData.properties.popupContent;
             const iconUrl = markerData.properties.iconUrl;
-
             // Create a marker with the selected custom icon and add it to the map
+            // Bind a popup with the provided content
             L.marker(
                 [coordinates[1], coordinates[0]], 
                 { icon: L.icon(
                     {iconUrl: iconUrl,
-                     iconSize: [25, 41],
-                     iconAnchor: [0, 41],
-                     popupAnchor: [1, -34]})
-             }).addTo(map).bindPopup(popupContent); // Bind a popup with the provided content
+                        iconSize: [25, 41],
+                        iconAnchor: [0, 41],
+                        popupAnchor: [1, -34]})
+                }).addTo(map).bindPopup(popupContent);
         });
-    });
+    };
 
-    // 6. Trigger the 'load' event manually once the tile layer is added
-    map.whenReady(function() {
-        map.fire('load');
-    });
-};
+    // Update the map's tile layer based on the theme
+    const updateMapTheme = (theme) => {
+      if (!map) return;
+  
+      if (theme === 'dark') {
+        map.removeLayer(lightTiles);
+        map.addLayer(darkTiles);
+      } else {
+        map.removeLayer(darkTiles);
+        map.addLayer(lightTiles);
+      }
+    };
+      
+    return {
+      initMap,
+      updateMapTheme
+    };
+  })();

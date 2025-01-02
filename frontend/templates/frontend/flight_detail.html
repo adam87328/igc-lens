@@ -60,17 +60,21 @@ body {
 </script>
 <!-- leaflet map -->
 {% load static %}
+<script src="{% static 'flight_detail_map.js' %}"></script>
 <script>
-    const style_xcscore = {
-        "color": "#30fcff",
-        "weight": 5,
-        "opacity": 0.65
-    };
     const cornerNE = {{corner_NE|safe}};
     const cornerSW = {{corner_SW|safe}};
     const geoGlides = {{ flight.glides.geojson | safe }};
     const geoThermals = {{ flight.thermals.geojson | safe }};
     const geoXcscore = {{ xcscore_layer | safe }};
+    // Initialize map if the map container exists
+    if (document.getElementById('map')) {
+      mapThemeInterface.initMap(
+        cornerNE,
+        cornerSW,
+        geoGlides,
+        geoThermals,
+        geoXcscore);
+    }
 </script>
-<script src="{% static 'flight_detail_map.js' %}"></script>
 {% endblock %}

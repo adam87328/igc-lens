@@ -1,4 +1,3 @@
-{% load static %}
 <!doctype html>
 <html lang="en"  data-bs-theme="dark">
   <head>
@@ -11,12 +10,24 @@
       crossorigin="anonymous">
     <link rel="stylesheet" 
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" 
-      href="{% static 'colors.css' %}">
-      {% block head %}
+    <!-- own stuff -->
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'colors.css' %}">
+    <script src="{% static 'colormode.js' %}"></script>
+    <!-- block head -->
+    {% block head %}
     {% endblock %}
   </head>
   <body>
+    <style>
+      .bi {
+        width: 1em;
+        height: 1em;
+        vertical-align: center;
+        fill: currentcolor;
+        }
+    </style>
+    {% include "svg.html" %}
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
       <div class="container-fluid">
         <a class="navbar-brand" href="{% url 'frontend:homepage' %}">igc lens</a>
@@ -37,12 +48,24 @@
             <li class="nav-item">
               <a class="nav-link" aria-current="page" href="{% url 'importer:upload' %}">Upload</a>
             </li>
+            <!-- tmp buttons to switch dark/light mode -->
+            <li>
+              <button type="button" class="dropdown-item d-flex" data-bs-theme-value="light" aria-pressed="false">
+                <svg class="bi me-2 opacity-50"><use href="#sun-fill"></use></svg>
+              </button>
+            </li>
+            <li>
+              <button type="button" class="dropdown-item d-flex active" data-bs-theme-value="dark" aria-pressed="true">
+                <svg class="bi me-2 opacity-50"><use href="#moon-stars-fill"></use></svg>
+              </button>
+            </li>
           </ul>
+          <!-- block to display filter form where applicable -->
           {% block navbar %}
-          {% endblock %}      
+          {% endblock %}
         </div>
       </div>
-    </nav>
+    </nav>    
     {% block content %}
     {% endblock %}
   </body>

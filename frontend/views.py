@@ -32,16 +32,17 @@ class StatisticsView(TemplateView):
         
         # get total values over all flights
         total = {}
-        total["flights"] = fm.get_flights_total()
-        total["airtime"] = fm.get_airtime_total()
+        total["flights"] = fm.all().count()
+        total["airtime"] = fm.all().get_airtime()
+
         
         # get values per year
         per_year = {}
-        for y in fm.get_unique_years():
+        for y in fm.all().get_unique_years():
             per_year[y] = {"airtime": {"abs": 0, "rel": 0},
                            "flights": {"abs": 0, "rel": 0}}
-            per_year[y]["airtime"]["abs"] = fm.get_airtime_for_year(y)
-            per_year[y]["flights"]["abs"] = fm.get_flights_for_year(y)
+            per_year[y]["airtime"]["abs"] = fm.all().get_year(y).get_airtime()
+            per_year[y]["flights"]["abs"] = fm.all().get_year(y).count()
 
         # compute values relative to best year
         for field in ["airtime", "flights"]:

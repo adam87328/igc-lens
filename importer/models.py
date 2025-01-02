@@ -49,37 +49,31 @@ class JSONModel(models.Model):
                 setattr(self, field_name, value)
 
 
-class FlightManager(models.Manager):
+class FlightQuerySet(models.QuerySet):
+
     def get_unique_years(self):
         """Return unique list of years, based on takeoff time stamp"""
         # Annotate year from related Takeoff 'time' field
-        q = Flight.objects.annotate(year=ExtractYear('takeoff__datetime'))
-        # Extract unique
-        q = q.values('year').distinct()
+        qs = self.annotate(year=ExtractYear('takeoff__datetime')).values('year').distinct()
         # QuerySet > regular list
-        unique_years = list(q.values_list('year', flat=True))
+        unique_years = list(qs.values_list('year', flat=True))
         unique_years.sort()
         return unique_years
     
-    def get_airtime_total(self):
+    def get_airtime(self):
         """Return airtime in hours"""
-        t_sec = Flight.objects.aggregate(Sum("airtime")).get('airtime__sum', 0)
+        t_sec = self.aggregate(Sum("airtime")).get('airtime__sum', 0)
         return t_sec / 3600
+    
+    def get_year(self,year):
+        """Return flights in year"""
+        return self.filter(takeoff__datetime__year=year)
+
+
+class FlightManager(models.Manager):
+    def get_queryset(self):
+        return FlightQuerySet(self.model, using=self._db)
         
-    def get_airtime_for_year(self,year):
-        """Return airtime in hours, 0 if no flights in year"""
-        q = Flight.objects.filter(takeoff__datetime__year=year)
-        t_sec = q.aggregate(Sum("airtime")).get('airtime__sum', 0)
-        return t_sec / 3600
-    
-    def get_flights_total(self):
-        return Flight.objects.count()
-    
-    def get_flights_for_year(self,year):
-        """Return number of flights, 0 if no flights in year"""
-        q = Flight.objects.filter(takeoff__datetime__year=year)
-        return q.count()
-    
 
 # Create your models here.
 class Flight(JSONModel):

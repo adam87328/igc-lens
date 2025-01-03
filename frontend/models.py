@@ -42,6 +42,8 @@ class FlightFilter(models.Model):
             "Free Triangle": "scoring_name",
             "Free Distance": "scoring_name",
         })
+        # todo
+        # No database takeoff
 
     def add_takeoffs(self):
         """Add unique list of takeoffs"""

@@ -296,26 +296,14 @@ class Takeoff(JSONModel):
     # belongs to flight
     parent = models.OneToOneField(Flight, on_delete=models.CASCADE)
 
-    # "name": "Col d'Izoard"
-    name = models.CharField(max_length=255)
-    # "dist": {
-    #   "value": 70.53027327496399,
-    #   "unit": "m"
-    # }
-    dist = models.FloatField()
+    # From tracklog (igc-lib)
+    # These are always set
+    #
     # "time": {
     #   "value": "2024-08-05 09:33:15",
     #   "unit": "UTC"
     # is localized to UTC on import
-    datetime = models.DateTimeField()
-    
-    # named takeoff location from takeoff database
-    # "db_lat": 47.0676,  
-    db_lat = models.FloatField()
-    # "db_lon": 9.104089999999998
-    db_lon = models.FloatField()
-    
-    # coordinates of takeoff from tracklog
+    datetime = models.DateTimeField()    
     # "lat": { 
     #   "value": 44.81906666666667,
     #   "unit": "deg"
@@ -332,7 +320,27 @@ class Takeoff(JSONModel):
     # }
     alt_gnss = models.FloatField()
 
-    # takeoff coordinates geocode information
+    # From paraglidingearth.com offline database
+    # These are empty if no DB entry near takeoff lat/lon
+    #
+    # "name": "Col d'Izoard"
+    name = models.CharField(max_length=255)
+    # "dist": {
+    #   "value": 70.53027327496399,
+    #   "unit": "m"
+    # }
+    dist = models.FloatField()
+    # "db_lat": 47.0676,  
+    db_lat = models.FloatField()
+    # "db_lon": 9.104089999999998
+    db_lon = models.FloatField()
+
+    # Missing: Geocode lookup to return country and state for TO lat/lon
+
+    # Nearest town/city geocode
+    # These are always set, but the country/state may not match the takeoff
+    # if the nearest city to the takeoff is in another administrative region
+    #
     # "city": "Luchsingen",
     city = models.CharField(max_length=64)
     # "state": "Glarus",

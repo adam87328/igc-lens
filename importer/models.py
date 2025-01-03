@@ -71,18 +71,24 @@ class FlightQuerySet(models.QuerySet):
         return km
     
     def get_unique_takeoffs(self):
-        """Return xc kilometers"""
-        qs = self.values_list('takeoff__name', flat=True).distinct()
+        qs = self.values_list('takeoff__idstr', flat=True).distinct()
+        return list(qs)
+
+    def get_unique_states(self):
+        qs = self.values_list('takeoff__state', flat=True).distinct()
         return list(qs)
 
     def filt_year(self,year):
         """Return flights in year"""
         return self.filter(takeoff__datetime__year=year)
     
-    def filt_takeoff(self,name):
+    def filt_takeoff(self,idstr):
         """Return flights from takeoff"""
-        return self.filter(takeoff__name=name)
+        return self.filter(takeoff__idstr=idstr)
 
+    def filt_state(self,state):
+        """Return flights with takeoff in state (not country)"""
+        return self.filter(takeoff__state=state)
 
 class FlightManager(models.Manager):
     def get_queryset(self):
@@ -337,6 +343,15 @@ class Takeoff(JSONModel):
     country_code = models.CharField(max_length=2)
     # "country": "Switzerland"
     country = models.CharField(max_length=64)
+
+    # A robust string identifying the takeoff "CH Grisons (46.8097,9.8420)""
+    idstr = models.CharField(max_length=64)
+
+    def _make_idstr(self):
+        s = self.country_code.upper()
+        s += f" {self.name}" if self.name else ""
+        s += f" {self.state} {self.city} ({self.lat:.3f},{self.lon:.3f})" if not self.name else ""
+        return s
 
     @property
     def datetime_local(self):

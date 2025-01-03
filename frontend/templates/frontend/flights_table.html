@@ -28,17 +28,17 @@
     <tbody>
       {% for flight in flights %}
       <tr>
-          <td><a class="icon-link" href="{% url 'frontend:flight_detail' flight.id %}"><i class="bi-box-seam"></i></a></td>
-          {% with flight.takeoff.datetime_local as lt %}
-          <td>{{ lt.time }} <small style="font-size: 60%" class="text-muted">{{ lt.utc_delta }}</small></td>
-          {% endwith %}
-          <td>{{ flight.takeoff.country_code|upper }}{%if flight.takeoff.name %} {{ flight.takeoff.name }} {% else %} N/A ({{ flight.takeoff.state }}){% endif %}</td>
-          <td>{{ flight.airtime_str }}</td>
-          <td style="display: flex; justify-content: left;">
-            <img src="{%static flight.icon_url%}" alt="{{ flight.xcscore.scoringName }}">
-            <span style="margin-left: 5px;"></span>{{ flight.xcscore.distance|floatformat:1 }}</span>
-          </td>
-          </a>
+        <td><a class="icon-link" href="{% url 'frontend:flight_detail' flight.id %}"><i class="bi-box-seam"></i></a></td>
+        {% with flight.takeoff.datetime_local as lt %}
+        <td>{{ lt.time }} <small style="font-size: 60%" class="text-muted">{{ lt.utc_delta }}</small></td>
+        {% endwith %}
+        <td>{{ flight.takeoff.country_code|upper }}{%if flight.takeoff.name %} {{ flight.takeoff.name }} {% else %} N/A ({{ flight.takeoff.state }}){% endif %}</td>
+        <td>{{ flight.airtime_str }}</td>
+        <td style="display: flex; justify-content: left;">
+          <img src="{%static flight.icon_url%}" alt="{{ flight.xcscore.scoringName }}">
+          <span style="margin-left: 5px;"></span>{{ flight.xcscore.distance|floatformat:1 }}</span>
+        </td>
+        </a>
       </tr>
       {% endfor %}
     </tbody>
@@ -48,13 +48,13 @@
     <nav aria-label="Page navigation example">
       <ul class="pagination justify-content-center">
           {% for k in page_obj.paginator.page_range %}
-              {% if page_obj.number == k %}
-              <li class="page-item active">
-              {% else %}
-              <li class="page-item">
-              {% endif %}
-                  <a class="page-link" href={% querystring page=k %}>{{ k }}</a> 
-              </li>
+            {% if page_obj.number == k %}
+            <li class="page-item active">
+            {% else %}
+            <li class="page-item">
+            {% endif %}
+                <a class="page-link" href={% querystring page=k %}>{{ k }}</a> 
+            </li>
           {% endfor %}
       </ul>
     </nav>

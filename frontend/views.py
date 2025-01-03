@@ -26,7 +26,7 @@ class StatisticsView(TemplateView):
         # Flight object manager shortcut
         fm = Flight.objects        
         
-        # empty flight db
+        # catch empty flight db
         if not fm.count():
             return {}
         
@@ -37,7 +37,6 @@ class StatisticsView(TemplateView):
         total["xc_km"] = fm.all().get_xckm()
         total["takeoffs"] = fm.all().get_unique_takeoffs() # list, not number
         
-        # get values per year
         per_year = {}
         for y in fm.all().get_unique_years():
             qy = fm.all().filt_year(y)
@@ -47,7 +46,6 @@ class StatisticsView(TemplateView):
             per_year[y]["airtime"]["abs"] = qy.get_airtime()
             per_year[y]["flights"]["abs"] = qy.count()
             per_year[y]["xc_km"]["abs"] = qy.get_xckm()
-
         # compute values relative to best year
         for field in ["airtime", "flights","xc_km"]:
             m = max(item[field]["abs"] for item in per_year.values())
@@ -55,20 +53,25 @@ class StatisticsView(TemplateView):
                 # in percent for use in CSS
                 item[field]["rel"] = 100 * item[field]["abs"] / m
 
-        # get values per year
         per_takeoff = {}
         for y in fm.all().get_unique_takeoffs():
             qy = fm.all().filt_takeoff(y)
-            per_takeoff[y] = {"airtime": 0,
-                           "flights": 0,
-                           "xc_km": 0}
+            per_takeoff[y] = {"airtime": 0,"flights": 0,"xc_km": 0}
             per_takeoff[y]["airtime"] = qy.get_airtime()
             per_takeoff[y]["flights"] = qy.count()
             per_takeoff[y]["xc_km"] = qy.get_xckm()
 
+        per_state = {}
+        for y in fm.all().get_unique_states():
+            qy = fm.all().filt_state(y)
+            per_state[y] = {"airtime": 0,"flights": 0,"xc_km": 0}
+            per_state[y]["airtime"] = qy.get_airtime()
+            per_state[y]["flights"] = qy.count()
+            per_state[y]["xc_km"] = qy.get_xckm()
 
         context["per_year"] = per_year
         context["per_takeoff"] = per_takeoff
+        context["per_state"] = per_state
         context["total"] = total
         return context
     
@@ -101,7 +104,7 @@ class FlightListView(ListView):
         for value, filter in FlightFilter.objects.get().active.items():
             
             if filter == 'takeoff':
-                qs = qs.filter(takeoff__name=value)
+                qs = qs.filt_takeoff(value)
 
             if filter == 'xc_dist':
                 # extract number

@@ -120,3 +120,5 @@ class CreateFlight():
         """Computations which depend on multiple sources"""
         flight.xcscore.xc_speed_airtime = \
             flight.xcscore.distance / (flight.airtime / 3600) # km/h
+        # generate and save idstr
+        flight.takeoff.idstr = flight.takeoff._make_idstr()

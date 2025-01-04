@@ -24,8 +24,10 @@
           {% with flight.takeoff.datetime_local as lt %}
           <li>{{ lt.time }} <small style="font-size: 60%" class="text-muted">UTC{{ lt.utc_delta }}</small></li>
           {% endwith %}
-          <li>{{flight.takeoff.country.upper}} {{flight.takeoff.name}}</li>
+          <li>{{takeoff}}</li>
+          {%if flight.takeoff.name%}
           <li>{{flight.takeoff.dist|floatformat}} m from database takeoff location</li>
+          {%endif%}
         </ul>
       <h6>Landing</h6>
         <ul>

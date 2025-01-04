@@ -91,6 +91,13 @@ class FlightDetailView(generic.DetailView):
         lon = self.object.timeseries['lon']
         context["corner_NE"] = [max(lat),max(lon)]
         context["corner_SW"] = [min(lat),min(lon)]
+        # takeoff 
+        o = self.object.takeoff
+        if o.name: # database match
+            context["takeoff"] = f"{o.country.upper()} {o.name}"
+        else:
+            context["takeoff"] = f"{o.idstr} (not in DB)"
+        
         return context
     
 
@@ -120,7 +127,7 @@ class FlightListView(ListView):
                 qs = qs.filter(xcscore__scoringName=value)
 
         # todo: order-by via table headings
-        return qs.order_by('date')
+        return qs.order_by('-date')
 
     def get(self, request, *args, **kwargs):
         # accumulate filters in FlightFilter model
@@ -147,7 +154,7 @@ class FlightListView(ListView):
 class FlightTableView(FlightListView):
     """A classic table"""
     template_name = "frontend/flights_table.html"
-    paginate_by = 20
+    paginate_by = 50 # todo: setting
 
     #def get_context_data(self, **kwargs):
     #    context = super().get_context_data(**kwargs)

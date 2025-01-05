@@ -78,6 +78,10 @@ class FlightQuerySet(models.QuerySet):
     def get_unique_states(self):
         qs = self.values_list('takeoff__admin1', flat=True).distinct()
         return list(qs)
+    
+    def get_unique_countries(self):
+        qs = self.values_list('takeoff__admin0', flat=True).distinct()
+        return list(qs)
 
     def filt_year(self,year):
         """Return flights in year"""

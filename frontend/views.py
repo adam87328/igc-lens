@@ -35,19 +35,23 @@ class StatisticsView(TemplateView):
         total["flights"] = fm.all().count()
         total["airtime"] = fm.all().get_airtime()
         total["xc_km"] = fm.all().get_xckm()
-        total["takeoffs"] = fm.all().get_unique_takeoffs() # list, not number
+        total["takeoffs"] = len(fm.all().get_unique_takeoffs())
+        total["states"] = len(fm.all().get_unique_states())
+        total["countries"] = len(fm.all().get_unique_countries())
         
         per_year = {}
         for y in fm.all().get_unique_years():
             qy = fm.all().filt_year(y)
             per_year[y] = {"airtime": {"abs": 0, "rel": 0},
                            "flights": {"abs": 0, "rel": 0},
-                           "xc_km": {"abs": 0, "rel": 0}}
+                           "xc_km": {"abs": 0, "rel": 0},
+                           "states":  {"abs": 0, "rel": 0},}
             per_year[y]["airtime"]["abs"] = qy.get_airtime()
             per_year[y]["flights"]["abs"] = qy.count()
             per_year[y]["xc_km"]["abs"] = qy.get_xckm()
+            per_year[y]["states"]["abs"] = len(qy.get_unique_states())
         # compute values relative to best year
-        for field in ["airtime", "flights","xc_km"]:
+        for field in ["airtime", "flights","xc_km","states"]:
             m = max(item[field]["abs"] for item in per_year.values())
             for item in per_year.values():
                 # in percent for use in CSS
@@ -102,7 +106,7 @@ class FlightDetailView(generic.DetailView):
         # takeoff 
         o = self.object.takeoff
         if o.name: # database match
-            context["takeoff"] = f"{o.country.upper()} {o.name}"
+            context["takeoff"] = f"{o.name}"
         else:
             context["takeoff"] = f"{o.idstr} (not in DB)"
         

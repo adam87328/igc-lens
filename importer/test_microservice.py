@@ -23,11 +23,19 @@ class TestMicroservice(TestCase):
         msi = MicroserviceInterface()
         self.assertTrue(msi.are_services_up())
 
-    def testGeocodeService(self):
+    def testNearestTownService(self):
         msi = MicroserviceInterface()
-        d = msi.geocode_service(47.0,9.0)
-        self.assertEqual(d['county'],'Glarus')
-        # with open(self.td / 'geocode.json','w') as f:
+        d = msi.nearest_town_service(47.0,9.0)
+        self.assertEqual(d['city'],'Luchsingen')
+        # with open(self.td / 'nearest_town.json','w') as f:
+        #     json.dump(d, f, indent=2)
+
+    def testAdmin1Service(self):
+        msi = MicroserviceInterface()
+        d = msi.admin1_service(47.0,9.0)
+        self.assertEqual(d['admin0'],'Switzerland')
+        self.assertEqual(d['admin1'],'Glarus')
+        # with open(self.td / 'admin1.json','w') as f:
         #     json.dump(d, f, indent=2)
 
     def testTakeoffdbService(self):

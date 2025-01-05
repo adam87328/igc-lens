@@ -1,7 +1,7 @@
 from django.db import models
 from django.urls import reverse
 # https://docs.djangoproject.com/en/5.1/topics/db/aggregation/
-from django.db.models import Sum, F, ExpressionWrapper, FloatField
+from django.db.models import Sum, F, FloatField, Value, BooleanField
 from django.db.models.functions import ExtractYear
 from django.templatetags.static import static
 
@@ -71,24 +71,35 @@ class FlightQuerySet(models.QuerySet):
         return km
     
     def get_unique_takeoffs(self):
-        qs = self.values_list('takeoff__idstr', flat=True).distinct()
-        return list(qs)
+        qs1 = self.filter(takeoff__name__exact="").values_list('takeoff__idstr', flat=True).distinct()
+        qs2 = self.exclude(takeoff__name__exact="").values_list('takeoff__name', flat=True).distinct()
+        return list(qs1) + list(qs2)
 
     def get_unique_states(self):
-        qs = self.values_list('takeoff__state', flat=True).distinct()
+        qs = self.values_list('takeoff__admin1', flat=True).distinct()
         return list(qs)
 
     def filt_year(self,year):
         """Return flights in year"""
         return self.filter(takeoff__datetime__year=year)
     
-    def filt_takeoff(self,idstr):
-        """Return flights from takeoff"""
-        return self.filter(takeoff__idstr=idstr)
+    def filt_takeoff(self,str):
+        """Return flights from takeoff
+        
+        str is either the name of a named takeoff, or an idstr
+        """
+        qs = self.filter(takeoff__name=str)
+        if qs:
+            qs = qs.annotate(named_takeoff=Value(True, output_field=BooleanField()))
+            return qs
+        else: 
+            qs = self.filter(takeoff__idstr=str)
+            qs = qs.annotate(named_takeoff=Value(False, output_field=BooleanField()))
+            return qs
 
     def filt_state(self,state):
         """Return flights with takeoff in state (not country)"""
-        return self.filter(takeoff__state=state)
+        return self.filter(takeoff__admin1=state)
 
 class FlightManager(models.Manager):
     def get_queryset(self):
@@ -335,30 +346,25 @@ class Takeoff(JSONModel):
     # "db_lon": 9.104089999999998
     db_lon = models.FloatField()
 
-    # Missing: Geocode lookup to return country and state for TO lat/lon
+    # Geocode lookup to return country and state for TO lat/lon
+    # "admin0": "Switzerland",
+    admin0 = models.CharField(max_length=64)
+    # "admin1": "Glarus",
+    admin1 = models.CharField(max_length=64)
+    # "iso_3166_2": "CH"
+    iso_3166_2 = models.CharField(max_length=2)
+    # "iso_3166_1": "CH-GL",
+    iso_3166_1 = models.CharField(max_length=8)
 
     # Nearest town/city geocode
-    # These are always set, but the country/state may not match the takeoff
-    # if the nearest city to the takeoff is in another administrative region
-    #
     # "city": "Luchsingen",
-    city = models.CharField(max_length=64)
-    # "state": "Glarus",
-    state = models.CharField(max_length=64)
-    # "county": "Glarus",
-    county = models.CharField(max_length=64)
-    # "country_code": "CH",
-    country_code = models.CharField(max_length=2)
-    # "country": "Switzerland"
-    country = models.CharField(max_length=64)
+    near_city = models.CharField(max_length=64)
 
     # A robust string identifying the takeoff "CH Grisons (46.8097,9.8420)""
     idstr = models.CharField(max_length=64)
 
     def _make_idstr(self):
-        s = self.country_code.upper()
-        s += f" {self.name}" if self.name else ""
-        s += f" {self.state} {self.city} ({self.lat:.3f},{self.lon:.3f})" if not self.name else ""
+        s = f" {self.iso_3166_2} {self.admin1} ({self.lat:.3f},{self.lon:.3f})"
         return s
 
     @property
@@ -366,7 +372,7 @@ class Takeoff(JSONModel):
         return to_localtime(self.datetime,self.parent.timezone)
  
     def __str__(self):
-        s = f"{str(self.datetime.time())} {self.country_code.upper()} "
+        s = f"{str(self.datetime.time())} {self.idstr}"
         s += f" {self.name}" if self.name else ""
         return s
     

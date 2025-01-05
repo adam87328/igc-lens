@@ -14,9 +14,15 @@ class MicroserviceInterface():
         
         return json.loads(response.text)
 
-    def geocode_service(self,lat,lon):
+    def nearest_town_service(self,lat,lon):
         response = requests.get(
-            self.GEOLOOKUP_URL + 'geocode', 
+            self.GEOLOOKUP_URL + 'nearest_town', 
+            params={'lat': lat, 'lon': lon} )
+        return json.loads(response.text)
+
+    def admin1_service(self,lat,lon):
+        response = requests.get(
+            self.GEOLOOKUP_URL + 'admin1', 
             params={'lat': lat, 'lon': lon} )
         return json.loads(response.text)
 

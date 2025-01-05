@@ -103,9 +103,12 @@ class CreateFlight():
     def assign_geocode(flight,lat,lon):
         """ takeoff lat/lon """
         msi = MicroserviceInterface()
-        json_data = msi.geocode_service(lat,lon)
+        json_data = msi.admin1_service(lat,lon)
         # unpack json data into one-to-one properties
         flight.takeoff._assign_props_from_json(json_data)
+        # nearest town
+        json_data = msi.nearest_town_service(lat,lon)
+        flight.takeoff.near_city = json_data["city"]
 
     @staticmethod
     def assign_takeoffdb(flight,lat,lon):

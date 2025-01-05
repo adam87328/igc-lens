@@ -4,16 +4,6 @@
 <div class="container-lg mt-5">
   <div class="col-xl-10 offset-xl-1">
 
-<h1>Total</h1>
-<div class="row"><div class="col-6">
-<p class="lead">
-  You left the ground {{total.flights}} times for a total of 
-  {{total.airtime|floatformat}} hours. 
-  takeoffs {{total.takeoffs}} states {{total.states}} countries {{total.countries}}
-</p>
-</div></div>
-
-<h1>Per Year</h1>
 <h2>Airtime</h2>
 {% for year, vals in per_year.items %}
 <div class="row">
@@ -81,48 +71,6 @@
   </div>
 </div>
 {% endfor %}
-
-<h2>per region</h2>
-
-<div class="row">
-  <table class="table table-hover table-sm w-100" style="max-width: 768px; margin: 0 auto;">
-    <thead>
-      <th>Region (Takeoff)</th>
-      <th>Airtime</th>
-      <th>Flights</th>
-      <th>XC km</th>
-    </thead>
-    {% for state, vals in per_state.items %}
-    <tr>
-      <td>{{state}}</td>
-      <td>{{vals.airtime|floatformat}}</td>
-      <td>{{vals.flights}}</td>
-      <td>{{vals.xc_km|floatformat}}</td>
-    </tr>
-    {% endfor %}
-  </table>
-</div>
-
-<h2>per takeoff</h2>
-
-<div class="row">
-  <table class="table table-hover table-sm w-100" style="max-width: 768px; margin: 0 auto;">
-    <thead>
-      <th>Takeoff</th>
-      <th>Airtime</th>
-      <th>Flights</th>
-      <th>XC km</th>
-    </thead>
-    {% for takeoff, vals in per_takeoff.items %}
-    <tr>
-      <td>{{takeoff}}</td>
-      <td>{{vals.airtime|floatformat}}</td>
-      <td>{{vals.flights}}</td>
-      <td>{{vals.xc_km|floatformat}}</td>
-    </tr>
-    {% endfor %}
-  </table>
-</div>
 
 </div></div>
 {% endblock %}

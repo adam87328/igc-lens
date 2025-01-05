@@ -13,23 +13,21 @@ import re
 from importer.models import *
 from frontend.models import *
 
+
 class HomepageView(TemplateView):
     template_name = "frontend/homepage.html"
 
 
-class StatisticsView(TemplateView):
-    template_name = "frontend/statistics.html"
+class StatsTotalsView(TemplateView):
+    template_name = "frontend/stats_totals.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        
         # Flight object manager shortcut
         fm = Flight.objects        
-        
         # catch empty flight db
         if not fm.count():
             return {}
-        
         # get total values over all flights
         total = {}
         total["flights"] = fm.all().count()
@@ -38,6 +36,21 @@ class StatisticsView(TemplateView):
         total["takeoffs"] = len(fm.all().get_unique_takeoffs())
         total["states"] = len(fm.all().get_unique_states())
         total["countries"] = len(fm.all().get_unique_countries())
+        
+        context["total"] = total
+        return context
+
+
+class StatsYearsView(TemplateView):
+    template_name = "frontend/stats_years.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Flight object manager shortcut
+        fm = Flight.objects        
+        # catch empty flight db
+        if not fm.count():
+            return {}
         
         per_year = {}
         for y in fm.all().get_unique_years():
@@ -50,13 +63,29 @@ class StatisticsView(TemplateView):
             per_year[y]["flights"]["abs"] = qy.count()
             per_year[y]["xc_km"]["abs"] = qy.get_xckm()
             per_year[y]["states"]["abs"] = len(qy.get_unique_states())
+        
         # compute values relative to best year
         for field in ["airtime", "flights","xc_km","states"]:
             m = max(item[field]["abs"] for item in per_year.values())
             for item in per_year.values():
                 # in percent for use in CSS
                 item[field]["rel"] = 100 * item[field]["abs"] / m
+        
+        context["per_year"] = per_year
+        return context
 
+
+class StatsPlacesView(TemplateView):
+    template_name = "frontend/stats_places.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Flight object manager shortcut
+        fm = Flight.objects        
+        # catch empty flight db
+        if not fm.count():
+            return {}
+        
         per_takeoff = {}
         for y in fm.all().get_unique_takeoffs():
             qy = fm.all().filt_takeoff(y)
@@ -80,13 +109,15 @@ class StatisticsView(TemplateView):
         per_state = dict(sorted(per_state.items(), 
                                 key=lambda item: item[1]['airtime'],
                                 reverse=True)) # descending
-
-        context["per_year"] = per_year
+        
         context["per_takeoff"] = per_takeoff
         context["per_state"] = per_state
-        context["total"] = total
         return context
-    
+
+
+class StatsEvolutionView(TemplateView):
+    template_name = "frontend/stats_evolution.html"
+
 
 class FlightDetailView(generic.DetailView):
     """Detail view of one flight, includes map and textual data"""

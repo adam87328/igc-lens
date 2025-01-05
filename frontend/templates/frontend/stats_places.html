@@ -1,0 +1,50 @@
+{% extends "main.html" %}
+
+{% block content %}
+<div class="container-lg mt-5">
+  <div class="col-xl-10 offset-xl-1">
+
+<h2>per region</h2>
+
+<div class="row">
+  <table class="table table-hover table-sm w-100" style="max-width: 768px; margin: 0 auto;">
+    <thead>
+      <th>Region (Takeoff)</th>
+      <th>Airtime</th>
+      <th>Flights</th>
+      <th>XC km</th>
+    </thead>
+    {% for state, vals in per_state.items %}
+    <tr>
+      <td>{{state}}</td>
+      <td>{{vals.airtime|floatformat}}</td>
+      <td>{{vals.flights}}</td>
+      <td>{{vals.xc_km|floatformat}}</td>
+    </tr>
+    {% endfor %}
+  </table>
+</div>
+
+<h2>per takeoff</h2>
+
+<div class="row">
+  <table class="table table-hover table-sm w-100" style="max-width: 768px; margin: 0 auto;">
+    <thead>
+      <th>Takeoff</th>
+      <th>Airtime</th>
+      <th>Flights</th>
+      <th>XC km</th>
+    </thead>
+    {% for takeoff, vals in per_takeoff.items %}
+    <tr>
+      <td>{{takeoff}}</td>
+      <td>{{vals.airtime|floatformat}}</td>
+      <td>{{vals.flights}}</td>
+      <td>{{vals.xc_km|floatformat}}</td>
+    </tr>
+    {% endfor %}
+  </table>
+</div>
+
+</div></div>
+{% endblock %}

@@ -60,6 +60,10 @@ class StatisticsView(TemplateView):
             per_takeoff[y]["airtime"] = qy.get_airtime()
             per_takeoff[y]["flights"] = qy.count()
             per_takeoff[y]["xc_km"] = qy.get_xckm()
+        # Sort the dictionary by the 'airtime' value of the inner dictionaries
+        per_takeoff = dict(sorted(per_takeoff.items(), 
+                                  key=lambda item: item[1]['airtime'],
+                                  reverse=True)) # descending
 
         per_state = {}
         for y in fm.all().get_unique_states():
@@ -68,6 +72,10 @@ class StatisticsView(TemplateView):
             per_state[y]["airtime"] = qy.get_airtime()
             per_state[y]["flights"] = qy.count()
             per_state[y]["xc_km"] = qy.get_xckm()
+        # Sort the dictionary by the 'airtime' value of the inner dictionaries
+        per_state = dict(sorted(per_state.items(), 
+                                key=lambda item: item[1]['airtime'],
+                                reverse=True)) # descending
 
         context["per_year"] = per_year
         context["per_takeoff"] = per_takeoff

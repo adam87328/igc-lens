@@ -1,9 +1,11 @@
 {% extends "main.html" %}
 {% load static %}
 
-{% block navbar %}
+
+{% block nav_filter %}
 {% include "filter_form.html" %}
 {% endblock %}
+
 
 {% block content %}
 <!-- filter div -->
@@ -63,5 +65,4 @@
   <p><i class="bi-cloud-hail"></i> No flights in query.</p>
 {% endif %}
 </div>
-
 {% endblock %}

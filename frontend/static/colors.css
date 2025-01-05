@@ -1,3 +1,11 @@
+/* darkmode selector */
+.bi {
+    width: 1.25em;
+    height: 1.25em;
+    vertical-align: center;
+    fill: currentcolor;
+}
+
 /* named colors */
 :root {
     --custom-sand1: #F7DCCC;

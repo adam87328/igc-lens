@@ -36,6 +36,8 @@ class StatsTotalsView(TemplateView):
         total["takeoffs"] = len(fm.all().get_unique_takeoffs())
         total["states"] = len(fm.all().get_unique_states())
         total["countries"] = len(fm.all().get_unique_countries())
+        total["years"] = len(fm.all().get_unique_years())
+        total["days"] = len(fm.all().get_unique_days())
         
         context["total"] = total
         return context
@@ -58,14 +60,14 @@ class StatsYearsView(TemplateView):
             per_year[y] = {"airtime": {"abs": 0, "rel": 0},
                            "flights": {"abs": 0, "rel": 0},
                            "xc_km": {"abs": 0, "rel": 0},
-                           "states":  {"abs": 0, "rel": 0},}
+                           "days":  {"abs": 0, "rel": 0},}
             per_year[y]["airtime"]["abs"] = qy.get_airtime()
             per_year[y]["flights"]["abs"] = qy.count()
             per_year[y]["xc_km"]["abs"] = qy.get_xckm()
-            per_year[y]["states"]["abs"] = len(qy.get_unique_states())
+            per_year[y]["days"]["abs"] = len(qy.get_unique_days())
         
         # compute values relative to best year
-        for field in ["airtime", "flights","xc_km","states"]:
+        for field in ["airtime", "flights","xc_km","days"]:
             m = max(item[field]["abs"] for item in per_year.values())
             for item in per_year.values():
                 # in percent for use in CSS

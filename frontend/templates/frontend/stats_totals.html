@@ -1,20 +1,17 @@
 {% extends "main.html" %}
 
 {% block content %}
-<div class="container-lg mt-5">
-  <div class="col-xl-10 offset-xl-1">
-
-    <h1>Total</h1>
-    <div class="row"><div class="col-6">
-    <p class="lead">
-      flights {{total.flights}} 
-      airtime {{total.airtime|floatformat}} hours. 
-      takeoffs {{total.takeoffs}} 
-      states {{total.states}} 
-      countries {{total.countries}}
-    </p>
-    </div></div>
-
-  </div>
+<div class="container-lg text-center mt-5">
+  <ul class="list-unstyled">
+    <li><h1><i class="bi bi-balloon-heart"></i></h1></li>
+    <li><p class="lead">{{total.airtime|floatformat}} hours in the air</p></li>
+    <li><p class="lead">{{total.days}} days out</p></li>
+    <li><p class="lead">{{total.flights}} times off the ground</p></li>
+    <li><p class="lead">{{total.xc_km|floatformat}} km cross-country</p></li>
+    <li><p class="lead">{{total.takeoffs}} takeoff locations</p></li>
+    <li><p class="lead">{{total.states}} regions</p></li>
+    <li><p class="lead">{{total.countries}} countries</p></li>
+    <li><p class="lead">{{total.years}} years</p></li>
+  </ul>
 </div>
 {% endblock %}

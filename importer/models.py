@@ -2,7 +2,7 @@ from django.db import models
 from django.urls import reverse
 # https://docs.djangoproject.com/en/5.1/topics/db/aggregation/
 from django.db.models import Sum, F, FloatField, Value, BooleanField
-from django.db.models.functions import ExtractYear
+from django.db.models.functions import ExtractYear, TruncDate
 from django.templatetags.static import static
 
 from datetime import timedelta
@@ -60,6 +60,15 @@ class FlightQuerySet(models.QuerySet):
         unique_years.sort()
         return unique_years
     
+    def get_unique_days(self):
+        """Return unique list of years, based on takeoff time stamp"""
+        # Annotate year from related Takeoff 'time' field
+        qs = self.annotate(day=TruncDate('takeoff__datetime')).values('day').distinct()
+        # QuerySet > regular list
+        unique_days = list(qs.values_list('day', flat=True))
+        unique_days.sort()
+        return unique_days
+
     def get_airtime(self):
         """Return airtime in hours"""
         t_sec = self.aggregate(Sum("airtime")).get('airtime__sum', 0)

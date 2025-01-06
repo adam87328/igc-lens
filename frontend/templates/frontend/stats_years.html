@@ -1,76 +1,73 @@
 {% extends "main.html" %}
 
 {% block content %}
-<div class="container-lg mt-5">
-  <div class="col-xl-10 offset-xl-1">
+<div class="container-xl mt-3">
 
-<h2>Airtime</h2>
-{% for year, vals in per_year.items %}
-<div class="row">
-  <div class="col-1">
-    {{year}}
-  </div>
-  <div class="col-11">
-    <div class="progress" 
-       role="progressbar">
-      <div class="progress-bar" style="width: {{ vals.airtime.rel }}%"> 
-        {{ vals.airtime.abs|floatformat }} h 
+  <div class="row">
+    <div class="col-lg">
+      <div class="row my-3"><p class="h3">Time in the air</p></div>
+      {% for year, vals in per_year.items %}
+      <div class="row mt-1">
+        <div class="col-md-auto">{{year}}</div>
+        <div class="col">
+          <div class="progress" role="progressbar">
+            <div class="progress-bar bg-info text-dark" style="width: {{ vals.airtime.rel }}%"> 
+              {{ vals.airtime.abs|floatformat:0 }} h 
+            </div>
+          </div>
+        </div>  
       </div>
+    {% endfor %}
     </div>
-  </div>
-</div>
-{% endfor %}
-
-<h2>Number of Flights</h2>
-{% for year, vals in per_year.items %}
-<div class="row">
-  <div class="col-1">
-    {{year}}
-  </div>
-  <div class="col-11">
-    <div class="progress" 
-        role="progressbar">
-      <div class="progress-bar" style="width: {{ vals.flights.rel }}%">
-          {{ vals.flights.abs|floatformat }}
+    <div class="col-lg">
+      <div class="row my-3"><p class="h3">Days out</p></div>
+      {% for year, vals in per_year.items %}
+      <div class="row mt-1">
+        <div class="col-md-auto">{{year}}</div>
+        <div class="col">
+          <div class="progress" role="progressbar">
+            <div class="progress-bar bg-info text-dark" style="width: {{ vals.days.rel }}%"> 
+              {{ vals.days.abs|floatformat:0 }} d
+            </div>
+          </div>
+        </div>  
       </div>
-    </div>
+    {% endfor %}
+    </div>  
   </div>
-</div>
-{% endfor %}
 
-<h2>XC Kilometers</h2>
-{% for year, vals in per_year.items %}
-<div class="row">
-  <div class="col-1">
-    {{year}}
-  </div>
-  <div class="col-11">
-    <div class="progress" 
-      role="progressbar">
-      <div class="progress-bar" style="width: {{ vals.xc_km.rel }}%">
-        {{ vals.xc_km.abs|floatformat }}
+  <div class="row">
+    <div class="col-lg">
+      <div class="row my-3"><p class="h3">Times off the ground</p></div>
+      {% for year, vals in per_year.items %}
+      <div class="row mt-1">
+        <div class="col-md-auto">{{year}}</div>
+        <div class="col">
+          <div class="progress" role="progressbar">
+            <div class="progress-bar bg-info text-dark" style="width: {{ vals.flights.rel }}%"> 
+              {{ vals.flights.abs|floatformat:0 }} x
+            </div>
+          </div>
+        </div>  
       </div>
+    {% endfor %}
     </div>
-  </div>
-</div>
-{% endfor %}
-
-<h2>Regions</h2>
-{% for year, vals in per_year.items %}
-<div class="row">
-  <div class="col-1">
-    {{year}}
-  </div>
-  <div class="col-11">
-    <div class="progress" 
-      role="progressbar">
-      <div class="progress-bar" style="width: {{ vals.states.rel }}%">
-        {{ vals.states.abs }}
+    <div class="col-lg">
+      <div class="row my-3"><p class="h3">Cross-country</p></div>
+      {% for year, vals in per_year.items %}
+      <div class="row mt-1">
+        <div class="col-md-auto">{{year}}</div>
+        <div class="col">
+          <div class="progress" role="progressbar">
+            <div class="progress-bar bg-info text-dark" style="width: {{ vals.xc_km.rel }}%"> 
+              {{ vals.xc_km.abs|floatformat:0 }} km
+            </div>
+          </div>
+        </div>  
       </div>
-    </div>
+    {% endfor %}
+    </div>  
   </div>
-</div>
-{% endfor %}
 
-</div></div>
+</div>
 {% endblock %}
